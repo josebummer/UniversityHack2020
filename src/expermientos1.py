@@ -66,7 +66,10 @@ def main():
 
     for label in progressbar.progressbar(np.unique(labels_ini)):
         print('\n--------------------OVA: %s vs All------------------' % label)
-        labels = np.array([1 if x == label else -1 for x in labels_ini])
+        if label != 'RESIDENTIAL':
+            labels = np.array([1 if x == label else -1 for x in labels_ini])
+        else:
+            labels = np.array([-1 if x == label else 1 for x in labels_ini])
 
         X_train, X_test, y_train, y_test = train_test_split(train, labels, test_size=0.2, random_state=42)
 
