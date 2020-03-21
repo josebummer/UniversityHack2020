@@ -1,12 +1,16 @@
-import pickle
-import numpy as np
 import os
+import pickle
+
+import numpy as np
 import pandas as pd
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import KFold, train_test_split
 from expermientos1 import prepare_data, fillna, to_numeric
+from imblearn.pipeline import Pipeline
+from imblearn.under_sampling import EditedNearestNeighbours
+from sklearn.metrics import classification_report
+from sklearn.model_selection import KFold
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
 
 
 def main():
@@ -26,7 +30,7 @@ def main():
     labels_names = np.unique(labels_ini)
 
     print('---------------------------------OVA MODEL--------------------------------')
-    y_pred = np.ones(labels_ini.shape[0], dtype=np.int)*-1
+    y_pred = np.ones(labels_ini.shape[0], dtype=np.int) * -1
     for i, (idx_train, idx_test) in enumerate(folds):
         print('\nFold %d:' % i)
 
@@ -87,7 +91,7 @@ def main():
         for i, (idx_train, idx_test) in enumerate(folds):
             print('\nFold %d:' % i)
 
-            best_params = best_params = {'weights': 'distance', 'n_neighbors': k, 'n_jobs': -1, 'metric': 'manhattan'}
+            best_params = {'weights': 'distance', 'n_neighbors': k, 'n_jobs': -1, 'metric': 'manhattan'}
             model = KNeighborsClassifier(**best_params)
 
             print('Training...')
@@ -108,6 +112,76 @@ def main():
 
         with open('predictions/KNN.pkl', 'wb') as ofile:
             pickle.dump(y_pred, ofile)
+
+    print('---------------------------------Predict OVA MODEL--------------------------------')
+
+    data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/trainOVA.txt', sep='|', index_col='ID')
+    labels_ini = data.iloc[:, -1]
+    data.drop('CLASE', axis=1, inplace=True)
+
+    sc = StandardScaler()
+    data = pd.DataFrame(sc.fit_transform(data), index=data.index, columns=data.columns)
+
+    y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
+    best_params = {'n_estimators': 600, 'max_depth': 6, 'learning_rate': 0.01, 'n_jobs': -1}
+
+    for i, (idx_train, idx_test) in enumerate(folds):
+        print('\nFold %d:' % i)
+
+        model = Pipeline([('scl', StandardScaler()),
+                          ('enn', EditedNearestNeighbours(sampling_strategy='majority', n_jobs=-1)),
+                          ('clf', XGBClassifier(**best_params))])
+
+        print('Training...')
+        model.fit(data.iloc[idx_train], labels_ini[idx_train])
+
+        print('Predicting...')
+        pred = model.predict(data.iloc[idx_test])
+
+        y_pred[idx_test] = pred
+
+        print('Fold classification report:')
+        print(classification_report(labels_ini.iloc[idx_test], y_pred[idx_test]))
+
+    assert 0 not in np.unique(y_pred)
+
+    print('Global classification report:')
+    print(classification_report(labels_ini, y_pred))
+
+    print('---------------------------------Raw + Predict OVA MODEL--------------------------------')
+
+    data_raw = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
+    data_raw.drop('CLASE', axis=1, inplace=True)
+    data = pd.concat([data_raw, data], axis=1)
+
+    sc = StandardScaler()
+    data = pd.DataFrame(sc.fit_transform(data), index=data.index, columns=data.columns)
+
+    y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
+    best_params = {'n_estimators': 1000, 'max_depth': 6, 'learning_rate': 0.01, 'n_jobs': -1}
+
+    for i, (idx_train, idx_test) in enumerate(folds):
+        print('\nFold %d:' % i)
+
+        model = Pipeline([('scl', StandardScaler()),
+                          ('enn', EditedNearestNeighbours(sampling_strategy='majority', n_jobs=-1)),
+                          ('clf', XGBClassifier(**best_params))])
+
+        print('Training...')
+        model.fit(data.iloc[idx_train], labels_ini[idx_train])
+
+        print('Predicting...')
+        pred = model.predict(data.iloc[idx_test])
+
+        y_pred[idx_test] = pred
+
+        print('Fold classification report:')
+        print(classification_report(labels_ini.iloc[idx_test], y_pred[idx_test]))
+
+    assert 0 not in np.unique(y_pred)
+
+    print('Global classification report:')
+    print(classification_report(labels_ini, y_pred))
 
 
 if __name__ == '__main__':
