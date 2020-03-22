@@ -11,12 +11,10 @@ from sklearn.model_selection import KFold
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
-import progressbar
-import time
 
 
 def main():
-    data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
+    data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID').iloc[:1000,]
     labels_ini = data.iloc[:, -1]
     data.drop('CLASE', axis=1, inplace=True)
 
@@ -43,7 +41,6 @@ def main():
         print('\nFold %d:' % i)
 
         y_pred_label = []
-        print(time.time())
         for label in labels_names:
             print('Load %s model:' % label)
 
@@ -78,11 +75,10 @@ def main():
 
         ############################# DES ###########################
         # Dynamic ensemble selection for multi-class classification with one-class classifiers
-        print(time.time())
         y_pred_label = np.array(y_pred_label).T
 
         knn = NearestNeighbors(n_neighbors=k, n_jobs=-1)
-        knn.fit(data.iloc[idx_train], labels_ini[idx_train])
+        knn.fit(data.iloc[idx_train], labels_ini.iloc[idx_train])
         neighbors = knn.kneighbors(data.iloc[idx_test])[1]
 
         labels_neigh = [np.unique(labels_int.loc[data.iloc[idx_train].iloc[neighs].index]) for neighs in neighbors]
@@ -91,9 +87,11 @@ def main():
                  [([i]*(7-len(x)),                  # i*numero de veces
                    np.setdiff1d(np.arange(7),x))    # [1..7]-x
                   for i,x in enumerate(labels_neigh)])))
-        y_pred_label[r_idx,c_idx] = 0
+        r_idx = r_idx.astype(np.int)
+        c_idx = c_idx.astype(np.int)
+        if len(r_idx) > 0 and len(c_idx) > 0:
+            y_pred_label[r_idx,c_idx] = 0
 
-        print(time.time())
         #############################################################
 
         y_pred[idx_test] = np.argmax(y_pred_label, axis=1)
@@ -105,6 +103,9 @@ def main():
 
     print('Global classification report:')
     print(classification_report(labels_ini, labels_names[y_pred]))
+
+    n_train = pd.DataFrame(y_pred_label, index=data.index, columns=labels_names)
+    pd.concat([y_pred, labels_ini], axis=1).to_csv('data/trainOVA-DES.txt', sep='|')
 
 if __name__ == '__main__':
     os.environ["PYTHONWARNINGS"] = "ignore::FutureWarning"

@@ -13,63 +13,77 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import train_test_split, cross_val_predict
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
+from sklearn.model_selection import KFold
 
 
 def main():
     data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
 
-    labels = data.iloc[:, -1]
+    labels_ini = data.iloc[:, -1]
     data.drop('CLASE', axis=1, inplace=True)
 
-    train = prepare_data(data)
-    train = fillna(train)
-    train = to_numeric(train)
+    data = prepare_data(data)
+    data = fillna(data)
+    data = to_numeric(data)
 
-    labels_names = np.unique(labels)
+    labels_names = np.unique(labels_ini)
 
     CREATE_DATA = False
 
     if CREATE_DATA:
-        y_pred_label = []
-        for label in progressbar.progressbar(labels_names):
-            print('Load %s model:' % label)
+        print('Creating data...')
+        kf = KFold(n_splits=5, shuffle=True)
+        folds = list(kf.split(data))
 
-            dump_file = './models/' + label + '_best_gs_pipeline.pkl'
-            with open(dump_file, 'rb') as ofile:
-                grid = pickle.load(ofile)
+        y_pred = np.ones((data.shape[0], len(labels_names)), dtype=np.float)*-1
+        for i, (idx_train, idx_test) in enumerate(folds):
+            print('Fold %d' % i)
 
-            model = grid.best_estimator_
-            for step in model.steps:
-                if step[0] in ['enn', 'clf']:
-                    step[1].n_jobs = -1
+            y_pred_label = []
+            for label in progressbar.progressbar(labels_names):
+                print('Load %s model:' % label)
 
-            # if label != 'RESIDENTIAL':
-            y_train = np.array([1 if x == label else -1 for x in labels])
-            # else:
-            #     y_train = np.array([-1 if x == label else 1 for x in labels])
+                dump_file = './models/' + label + '_best_gs_pipeline.pkl'
+                with open(dump_file, 'rb') as ofile:
+                    grid = pickle.load(ofile)
 
-            print('Predicting...')
-            pred_proba = cross_val_predict(model, train, y_train, method='predict_proba', n_jobs=-1, cv=5)
+                model = grid.best_estimator_
+                for step in model.steps:
+                    if step[0] in ['enn', 'clf']:
+                        step[1].n_jobs = -1
 
-            # if label != 'RESIDENTIAL':
-            y_pred_label.append(pred_proba[:, 1])
-            # else:
-            #     y_pred_label.append(pred_proba[:, 0])
+                if label != 'RESIDENTIAL':
+                    labels = np.array([1 if x == label else -1 for x in labels_ini])
+                else:
+                    labels = np.array([-1 if x == label else 1 for x in labels_ini])
 
-        n_train = pd.DataFrame(np.array(y_pred_label).T, index=train.index, columns=labels_names)
+                print('Training...')
+                model.fit(data.iloc[idx_train], labels[idx_train])
+
+                print('Predicting...')
+                pred_proba = model.predict_proba(data.iloc[idx_test])
+
+                if label != 'RESIDENTIAL':
+                    y_pred_label.append(pred_proba[:, 1])
+                else:
+                    y_pred_label.append(pred_proba[:, 0])
+
+            y_pred[idx_test] = np.array(y_pred_label).T
+
+        n_data = pd.DataFrame(y_pred, index=data.index, columns=labels_names)
 
         print('Save new train')
-        pd.concat([n_train, labels], axis=1).to_csv('data/trainOVA.txt', sep='|')
+        pd.concat([n_data, labels_ini], axis=1).to_csv('data/trainOVA.txt', sep='|')
     else:
         print('Load new data')
-        n_train = pd.read_csv('/home/jose/Escritorio/datathon/src/data/trainOVA.txt', sep='|', index_col='ID')
+        n_data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/trainOVA.txt', sep='|', index_col='ID')
 
-        labels = n_train.iloc[:, -1]
-        n_train.drop('CLASE', axis=1, inplace=True)
+        labels_ini = n_data.iloc[:, -1]
+        n_data.drop('CLASE', axis=1, inplace=True)
 
     ####################################################################################################################
 
-    X_train, X_test, y_train, y_test = train_test_split(n_train, labels, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(n_data, labels_ini, test_size=0.2, random_state=42)
 
     pipe_xgb = Pipeline([('scl', StandardScaler()),
                          ('clf', XGBClassifier(random_state=42))])
@@ -143,7 +157,7 @@ def main():
 
     ########################################################################################################################
 
-    n_data = pd.concat([train, n_train], axis=1)
+    n_data = pd.concat([data, n_data], axis=1)
     X_train = n_data.loc[X_train.index]
     X_test = n_data.loc[X_test.index]
 
