@@ -92,12 +92,8 @@ def main():
                                ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
                                ('clf', XGBClassifier(random_state=42))])
 
-    pipe_xgb_pca = Pipeline([('scl', StandardScaler()),
-                             ('pca', PCA(n_components=3)),
-                             ('clf', XGBClassifier(random_state=42))])
-
     grid_params_xgboost = [{'clf__max_depth': [2, 6, 12, 18],
-                            'clf__learning_rate': [0.01, 0.1, 0.15],
+                            'clf__learning_rate': [0.1, 0.15, 0.3, 0.4],
                             'clf__n_estimators': [400, 600, 1000, 1200]}]
 
     jobs = -1
@@ -115,17 +111,10 @@ def main():
                                       n_jobs=jobs,
                                       n_iter=20)
 
-    gs_xgb_pca = RandomizedSearchCV(estimator=pipe_xgb_pca,
-                                    param_distributions=grid_params_xgboost,
-                                    scoring=make_scorer(f1_score, average='macro'),
-                                    cv=5,
-                                    n_jobs=jobs,
-                                    n_iter=20)
-
-    grids = [gs_xgb, gs_xgb_noisy, gs_xgb_pca]
+    grids = [gs_xgb, gs_xgb_noisy]
 
     # Dictionary of pipelines and classifier types for ease of reference
-    grid_dict = {0: 'XGB', 1: 'XGB w/ENN', 2: 'XGB w/PCA'}
+    grid_dict = {0: 'XGB', 1: 'XGB w/ENN'}
 
     # Fit the grid search objects
     print('-------------------------------------------Only predict OVA------------------------------------------------')
@@ -141,7 +130,7 @@ def main():
         # Best training data accuracy
         print('Best training f1: %.3f' % grids[idx].best_score_)
         # Predict on test data with best params
-        model = grid.best_estimator_
+        model = grids[idx].best_estimator_
         for step in model.steps:
             if step[0] in ['enn', 'clf']:
                 step[1].n_jobs = -1
@@ -174,7 +163,7 @@ def main():
         # Best training data accuracy
         print('Best training f1: %.3f' % grids[idx].best_score_)
         # Predict on test data with best params
-        model = grid.best_estimator_
+        model = grids[idx].best_estimator_
         for step in model.steps:
             if step[0] in ['enn', 'clf']:
                 step[1].n_jobs = -1

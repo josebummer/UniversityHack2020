@@ -8,7 +8,7 @@ from imblearn.pipeline import Pipeline
 from imblearn.under_sampling import EditedNearestNeighbours
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import f1_score, classification_report
+from sklearn.metrics import f1_score, classification_report, make_scorer
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -62,6 +62,14 @@ def main():
     train = fillna(train)
     train = to_numeric(train)
 
+    weights = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train_weights.cvs', sep='|', index_col='ID')
+    class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
+                    'INDUSTRIAL': 4.647398736012043e-05,
+                    'PUBLIC': 3.783937948148589e-05,
+                    'OFFICE': 4.558736182249404e-05,
+                    'RETAIL': 4.2627096025849134e-05,
+                    'AGRICULTURE': 6.261938403426534e-05,
+                    'OTHER': 3.8319803354362536e-05}
     # train, test, yy_train, yy_test = train_test_split(train, labels_ini, test_size=0.2, random_state=42)
 
     for label in progressbar.progressbar(np.unique(labels_ini)):
@@ -71,19 +79,24 @@ def main():
         else:
             labels = np.array([-1 if x == label else 1 for x in labels_ini])
 
+        class_weight = {}
+        if label == 'RESIDENTIAL':
+            class_weight[-1] = class_weights['RESIDENTIAL']
+            class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        else:
+            class_weight[1] = class_weights[label]
+            class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+
         X_train, X_test, y_train, y_test = train_test_split(train, labels, test_size=0.2, random_state=42)
+        # fit_params = {'clf__sample_weight': weights.loc[X_train.index].values.reshape(-1)}
 
         # Construct some pipelines
         pipe_rf = Pipeline([('scl', StandardScaler()),
-                            ('clf', RandomForestClassifier(random_state=42))])
+                            ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_rf_noisy = Pipeline([('scl', StandardScaler()),
                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                                  ('clf', RandomForestClassifier(random_state=42))])
-
-        pipe_rf_pca = Pipeline([('scl', StandardScaler()),
-                                ('pca', PCA(n_components=2, random_state=42)),
-                                ('clf', RandomForestClassifier(random_state=42))])
+                                  ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_knn = Pipeline([('scl', StandardScaler()),
                              ('clf', KNeighborsClassifier())])
@@ -92,38 +105,30 @@ def main():
                                    ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
                                    ('clf', KNeighborsClassifier())])
 
-        pipe_knn_pca = Pipeline([('scl', StandardScaler()),
-                                 ('pca', PCA(n_components=2)),
-                                 ('clf', KNeighborsClassifier())])
-
         pipe_xgb = Pipeline([('scl', StandardScaler()),
-                             ('clf', XGBClassifier(random_state=42))])
+                             ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_xgb_noisy = Pipeline([('scl', StandardScaler()),
                                    ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                                   ('clf', XGBClassifier(random_state=42))])
-
-        pipe_xgb_pca = Pipeline([('scl', StandardScaler()),
-                                 ('pca', PCA(n_components=2)),
-                                 ('clf', XGBClassifier(random_state=42))])
+                                   ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
 
         # Set grid search params
         grid_params_rf = [{'clf__criterion': ['gini', 'entropy'],
                            'clf__min_samples_leaf': [1, 3, 5],
                            'clf__max_depth': [None, 2, 5, 7],
-                           'clf__n_estimators': [50, 100, 400, 900],
+                           'clf__n_estimators': [50, 100, 400, 900, 1200],
                            'clf__min_samples_split': [2, 5, 8]}]
 
         grid_params_knn = [{'clf__n_neighbors': [1, 3, 5, 7, 11, 13],
                             'clf__weights': ['uniform', 'distance'],
                             'clf__metric': ['minkowski', 'manhattan']}]
 
-        grid_params_xgboost = [{'clf__max_depth': [2, 5, 10, 15],
-                                'clf__learning_rate': [0.01, 0.1, 0.15],
-                                'clf__n_estimators': [100, 500, 1000]}]
+        grid_params_xgboost = [{'clf__max_depth': [2, 6, 8, 12, 18],
+                                'clf__learning_rate': [0.1, 0.15, 0.3, 0.4, 0.5],
+                                'clf__n_estimators': [400, 600, 900, 1200]}]
 
         # Construct grid searches
-        jobs = -1
+        jobs = 1
 
         gs_rf = RandomizedSearchCV(estimator=pipe_rf,
                                    param_distributions=grid_params_rf,
@@ -139,13 +144,6 @@ def main():
                                          n_jobs=jobs,
                                          n_iter=20)
 
-        gs_rf_pca = RandomizedSearchCV(estimator=pipe_rf_pca,
-                                       param_distributions=grid_params_rf,
-                                       scoring='f1',
-                                       cv=5,
-                                       n_jobs=jobs,
-                                       n_iter=20)
-
         gs_knn = RandomizedSearchCV(estimator=pipe_knn,
                                     param_distributions=grid_params_knn,
                                     scoring='f1',
@@ -159,13 +157,6 @@ def main():
                                           cv=5,
                                           n_jobs=jobs,
                                           n_iter=20)
-
-        gs_knn_pca = RandomizedSearchCV(estimator=pipe_knn_pca,
-                                        param_distributions=grid_params_knn,
-                                        scoring='f1',
-                                        cv=5,
-                                        n_jobs=jobs,
-                                        n_iter=20)
 
         gs_xgb = RandomizedSearchCV(estimator=pipe_xgb,
                                     param_distributions=grid_params_xgboost,
@@ -181,49 +172,44 @@ def main():
                                           n_jobs=jobs,
                                           n_iter=20)
 
-        gs_xgb_pca = RandomizedSearchCV(estimator=pipe_xgb_pca,
-                                        param_distributions=grid_params_xgboost,
-                                        scoring='f1',
-                                        cv=5,
-                                        n_jobs=jobs,
-                                        n_iter=20)
-
         # List of pipelines for ease of iteration
-        grids = [gs_rf, gs_rf_noisy, gs_rf_pca, gs_knn, gs_knn_noisy, gs_knn_pca, gs_xgb, gs_xgb_noisy, gs_xgb_pca]
+        grids = [gs_rf, gs_rf_noisy, gs_knn, gs_knn_noisy, gs_xgb, gs_xgb_noisy]
 
         # Dictionary of pipelines and classifier types for ease of reference
         grid_dict = {0: 'Random Forest', 1: 'Random Forest w/ENN',
-                     2: 'Random Forest w/PCA', 3: 'KNN',
-                     4: 'KNN w/ENN', 5: 'KNN w/PCA',
-                     6: 'XGB', 7: 'XGB w/ENN', 8: 'XGB w/PCA'}
+                     2: 'KNN', 3: 'KNN w/ENN',
+                     4: 'XGB', 5: 'XGB w/ENN'}
 
         # Fit the grid search objects
         print('Performing model optimizations...')
         best_f1 = 0.0
         best_clf = 0
         best_gs = ''
-        for idx, gs in enumerate(grids):
+        for idx in progressbar.progressbar(range(len(grids))):
             print('\nEstimator: %s' % grid_dict[idx])
             # Fit grid search
-            gs.fit(X_train, y_train)
+            grids[idx].fit(X_train, y_train)
             # Best params
-            print('Best params: %s' % gs.best_params_)
+            print('Best params: %s' % grids[idx].best_params_)
             # Best training data accuracy
-            print('Best training f1: %.3f' % gs.best_score_)
+            print('Best training f1: %.3f' % grids[idx].best_score_)
             # Predict on test data with best params
-            y_pred = gs.predict(X_test)
+            y_pred = grids[idx].predict(X_test)
             # Test data accuracy of model with best params
             print('Test set metrics for best params:')
+            print('Normal clasification:')
             print(classification_report(y_test, y_pred))
+            print('Weighted clasification:')
+            print(classification_report(y_test, y_pred, sample_weight=weights.loc[X_test.index]))
             # Track best (highest test f1) model
-            if f1_score(y_test, y_pred) > best_f1:
-                best_f1 = f1_score(y_test, y_pred)
-                best_gs = gs
+            if f1_score(y_test, y_pred, sample_weight=weights.loc[X_test.index]) > best_f1:
+                best_f1 = f1_score(y_test, y_pred, sample_weight=weights.loc[X_test.index])
+                best_gs = grids[idx]
                 best_clf = idx
         print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
 
         # Save best grid search pipeline to file
-        dump_file = './models/' + label + '_best_gs_pipeline.pkl'
+        dump_file = './models2/' + label + '_best_gs_pipeline.pkl'
         with open(dump_file, 'wb') as ofile:
             pickle.dump(best_gs, ofile)
         print('\nSaved %s grid search pipeline to file: %s' % (grid_dict[best_clf], dump_file))

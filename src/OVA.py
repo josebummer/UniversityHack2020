@@ -29,89 +29,89 @@ def main():
 
     labels_names = np.unique(labels_ini)
 
-    print('---------------------------------OVA MODEL--------------------------------')
-    y_pred = np.ones(labels_ini.shape[0], dtype=np.int) * -1
-    for i, (idx_train, idx_test) in enumerate(folds):
-        print('\nFold %d:' % i)
-
-        y_pred_label = []
-        for label in labels_names:
-            print('Load %s model:' % label)
-
-            dump_file = './models/' + label + '_best_gs_pipeline.pkl'
-            with open(dump_file, 'rb') as ofile:
-                grid = pickle.load(ofile)
-
-            model = grid.best_estimator_
-            for step in model.steps:
-                if step[0] in ['enn', 'clf']:
-                    step[1].n_jobs = -1
-
-            if label != 'RESIDENTIAL':
-                labels = np.array([1 if x == label else -1 for x in labels_ini])
-            else:
-                labels = np.array([-1 if x == label else 1 for x in labels_ini])
-
-            print('Training...')
-            model.fit(data.iloc[idx_train], labels[idx_train])
-
-            print('Predicting...')
-            pred_proba = model.predict_proba(data.iloc[idx_test])
-            pred = model.predict(data.iloc[idx_test])
-
-            print('Local clasification report:')
-            print(classification_report(labels[idx_test], pred))
-
-            if label != 'RESIDENTIAL':
-                y_pred_label.append(pred_proba[:, 1])
-            else:
-                y_pred_label.append(pred_proba[:, 0])
-
-        y_pred[idx_test] = np.argmax(y_pred_label, axis=0)
-
-        print('Fold classification report:')
-        print(classification_report(labels_ini.iloc[idx_test], labels_names[y_pred[idx_test]]))
-
-    assert -1 not in np.unique(y_pred)
-
-    print('Global classification report:')
-    print(classification_report(labels_ini, labels_names[y_pred]))
-
-    with open('predictions/OVA.pkl', 'wb') as ofile:
-        pickle.dump(labels_names[y_pred], ofile)
-
-    print('---------------------------------KNN MODEL--------------------------------')
-
-    sc = StandardScaler()
-    data = pd.DataFrame(sc.fit_transform(data), index=data.index, columns=data.columns)
-
-    y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
-    for k in [1, 3]:
-        print('-----K value = %d------' % k)
-        for i, (idx_train, idx_test) in enumerate(folds):
-            print('\nFold %d:' % i)
-
-            best_params = {'weights': 'distance', 'n_neighbors': k, 'n_jobs': -1, 'metric': 'manhattan'}
-            model = KNeighborsClassifier(**best_params)
-
-            print('Training...')
-            model.fit(data.iloc[idx_train], labels_ini[idx_train])
-
-            print('Predicting...')
-            pred = model.predict(data.iloc[idx_test])
-
-            y_pred[idx_test] = pred
-
-            print('Fold classification report:')
-            print(classification_report(labels_ini.iloc[idx_test], y_pred[idx_test]))
-
-        assert 0 not in np.unique(y_pred)
-
-        print('Global classification report:')
-        print(classification_report(labels_ini, y_pred))
-
-        with open('predictions/KNN.pkl', 'wb') as ofile:
-            pickle.dump(y_pred, ofile)
+    # print('---------------------------------OVA MODEL--------------------------------')
+    # y_pred = np.ones(labels_ini.shape[0], dtype=np.int) * -1
+    # for i, (idx_train, idx_test) in enumerate(folds):
+    #     print('\nFold %d:' % i)
+    #
+    #     y_pred_label = []
+    #     for label in labels_names:
+    #         print('Load %s model:' % label)
+    #
+    #         dump_file = './models/' + label + '_best_gs_pipeline.pkl'
+    #         with open(dump_file, 'rb') as ofile:
+    #             grid = pickle.load(ofile)
+    #
+    #         model = grid.best_estimator_
+    #         for step in model.steps:
+    #             if step[0] in ['enn', 'clf']:
+    #                 step[1].n_jobs = -1
+    #
+    #         if label != 'RESIDENTIAL':
+    #             labels = np.array([1 if x == label else -1 for x in labels_ini])
+    #         else:
+    #             labels = np.array([-1 if x == label else 1 for x in labels_ini])
+    #
+    #         print('Training...')
+    #         model.fit(data.iloc[idx_train], labels[idx_train])
+    #
+    #         print('Predicting...')
+    #         pred_proba = model.predict_proba(data.iloc[idx_test])
+    #         pred = model.predict(data.iloc[idx_test])
+    #
+    #         print('Local clasification report:')
+    #         print(classification_report(labels[idx_test], pred))
+    #
+    #         if label != 'RESIDENTIAL':
+    #             y_pred_label.append(pred_proba[:, 1])
+    #         else:
+    #             y_pred_label.append(pred_proba[:, 0])
+    #
+    #     y_pred[idx_test] = np.argmax(y_pred_label, axis=0)
+    #
+    #     print('Fold classification report:')
+    #     print(classification_report(labels_ini.iloc[idx_test], labels_names[y_pred[idx_test]]))
+    #
+    # assert -1 not in np.unique(y_pred)
+    #
+    # print('Global classification report:')
+    # print(classification_report(labels_ini, labels_names[y_pred]))
+    #
+    # with open('predictions/OVA.pkl', 'wb') as ofile:
+    #     pickle.dump(labels_names[y_pred], ofile)
+    #
+    # print('---------------------------------KNN MODEL--------------------------------')
+    #
+    # sc = StandardScaler()
+    # data = pd.DataFrame(sc.fit_transform(data), index=data.index, columns=data.columns)
+    #
+    # y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
+    # for k in [1, 3]:
+    #     print('-----K value = %d------' % k)
+    #     for i, (idx_train, idx_test) in enumerate(folds):
+    #         print('\nFold %d:' % i)
+    #
+    #         best_params = {'weights': 'distance', 'n_neighbors': k, 'n_jobs': -1, 'metric': 'manhattan'}
+    #         model = KNeighborsClassifier(**best_params)
+    #
+    #         print('Training...')
+    #         model.fit(data.iloc[idx_train], labels_ini[idx_train])
+    #
+    #         print('Predicting...')
+    #         pred = model.predict(data.iloc[idx_test])
+    #
+    #         y_pred[idx_test] = pred
+    #
+    #         print('Fold classification report:')
+    #         print(classification_report(labels_ini.iloc[idx_test], y_pred[idx_test]))
+    #
+    #     assert 0 not in np.unique(y_pred)
+    #
+    #     print('Global classification report:')
+    #     print(classification_report(labels_ini, y_pred))
+    #
+    #     with open('predictions/KNN.pkl', 'wb') as ofile:
+    #         pickle.dump(y_pred, ofile)
 
     print('---------------------------------Predict OVA MODEL--------------------------------')
 
@@ -119,11 +119,8 @@ def main():
     labels_ini = data.iloc[:, -1]
     data.drop('CLASE', axis=1, inplace=True)
 
-    sc = StandardScaler()
-    data = pd.DataFrame(sc.fit_transform(data), index=data.index, columns=data.columns)
-
     y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
-    best_params = {'n_estimators': 600, 'max_depth': 6, 'learning_rate': 0.01, 'n_jobs': -1}
+    best_params = {'n_estimators': 600, 'max_depth': 2, 'learning_rate': 0.1, 'n_jobs': -1}
 
     for i, (idx_train, idx_test) in enumerate(folds):
         print('\nFold %d:' % i)
@@ -152,13 +149,15 @@ def main():
 
     data_raw = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
     data_raw.drop('CLASE', axis=1, inplace=True)
+
+    data_raw = prepare_data(data_raw)
+    data_raw = fillna(data_raw)
+    data_raw = to_numeric(data_raw)
+
     data = pd.concat([data_raw, data], axis=1)
 
-    sc = StandardScaler()
-    data = pd.DataFrame(sc.fit_transform(data), index=data.index, columns=data.columns)
-
     y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
-    best_params = {'n_estimators': 1000, 'max_depth': 6, 'learning_rate': 0.01, 'n_jobs': -1}
+    best_params = {'n_estimators': 600, 'max_depth': 12, 'learning_rate': 0.4, 'n_jobs': -1}
 
     for i, (idx_train, idx_test) in enumerate(folds):
         print('\nFold %d:' % i)

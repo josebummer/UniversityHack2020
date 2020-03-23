@@ -55,32 +55,49 @@ weighted avg       0.88      0.90      0.89    103230
 Global classification report:
               precision    recall  f1-score   support
 
- AGRICULTURE       0.68      0.68      0.68       338
-  INDUSTRIAL       0.66      0.70      0.68      4490
-      OFFICE       0.33      0.21      0.25      1828
-       OTHER       0.54      0.52      0.53      1332
-      PUBLIC       0.37      0.38      0.38      2976
+ AGRICULTURE       0.65      0.71      0.68       338
+  INDUSTRIAL       0.65      0.71      0.68      4490
+      OFFICE       0.32      0.20      0.25      1828
+       OTHER       0.51      0.52      0.52      1332
+      PUBLIC       0.36      0.39      0.37      2976
  RESIDENTIAL       0.95      0.97      0.96     90173
-      RETAIL       0.53      0.23      0.32      2093
+      RETAIL       0.51      0.21      0.30      2093
 
-    accuracy                           0.91    103230
-   macro avg       0.58      0.53      0.54    103230
-weighted avg       0.90      0.91      0.90    103230
+    accuracy                           0.90    103230
+   macro avg       0.57      0.53      0.54    103230
+weighted avg       0.90      0.90      0.90    103230
 
 ---------------------------------Raw + Predict OVA MODEL--------------------------------
 
 Global classification report:
               precision    recall  f1-score   support
 
- AGRICULTURE       0.66      0.70      0.68       338
-  INDUSTRIAL       0.69      0.69      0.69      4490
-      OFFICE       0.36      0.23      0.28      1828
-       OTHER       0.57      0.52      0.54      1332
-      PUBLIC       0.40      0.38      0.39      2976
+ AGRICULTURE       0.67      0.75      0.70       338
+  INDUSTRIAL       0.67      0.69      0.68      4490
+      OFFICE       0.34      0.24      0.28      1828
+       OTHER       0.52      0.50      0.51      1332
+      PUBLIC       0.37      0.39      0.38      2976
  RESIDENTIAL       0.95      0.97      0.96     90173
-      RETAIL       0.54      0.23      0.32      2093
+      RETAIL       0.45      0.23      0.30      2093
 
-    accuracy                           0.91    103230
-   macro avg       0.60      0.53      0.55    103230
-weighted avg       0.90      0.91      0.90    103230
+    accuracy                           0.90    103230
+   macro avg       0.57      0.54      0.55    103230
+weighted avg       0.90      0.90      0.90    103230
+
+---------------------------------OVA-DES MODEL--------------------------------
+
+Global classification report:
+              precision    recall  f1-score   support
+
+ AGRICULTURE       0.70      0.46      0.55       338
+  INDUSTRIAL       0.67      0.61      0.64      4490
+      OFFICE       0.36      0.16      0.23      1828
+       OTHER       0.50      0.28      0.36      1332
+      PUBLIC       0.41      0.23      0.29      2976
+ RESIDENTIAL       0.93      0.98      0.96     90173
+      RETAIL       0.50      0.18      0.27      2093
+
+    accuracy                           0.90    103230
+   macro avg       0.58      0.41      0.47    103230
+weighted avg       0.88      0.90      0.89    103230
 

@@ -77,7 +77,7 @@ def main():
         # Dynamic ensemble selection for multi-class classification with one-class classifiers
         y_pred_label = np.array(y_pred_label).T
 
-        knn = NearestNeighbors(n_neighbors=k, n_jobs=-1)
+        knn = NearestNeighbors(n_neighbors=k, n_jobs=-1, metric='manhattan')
         knn.fit(data.iloc[idx_train], labels_ini.iloc[idx_train])
         neighbors = knn.kneighbors(data.iloc[idx_test])[1]
 
@@ -94,6 +94,28 @@ def main():
 
         #############################################################
 
+        ############################# DESthr ###########################
+        # Dynamic ensemble selection for multi-class classification with one-class classifiers
+        # y_pred_label = np.array(y_pred_label).T
+        #
+        # knn = NearestNeighbors(n_neighbors=k, n_jobs=-1)
+        # knn.fit(data.iloc[idx_train], labels_ini.iloc[idx_train])
+        # neighbors = knn.kneighbors(data.iloc[idx_test])[1]
+
+        # TODO se elenan las clases que tiene menos de alpha*k elementos
+        labels_neigh = [np.unique(labels_int.loc[data.iloc[idx_train].iloc[neighs].index]) for neighs in neighbors]
+
+        r_idx, c_idx = list(map(np.concatenate, zip(*
+                                                    [([i] * (7 - len(x)),  # i*numero de veces
+                                                      np.setdiff1d(np.arange(7), x))  # [1..7]-x
+                                                     for i, x in enumerate(labels_neigh)])))
+        r_idx = r_idx.astype(np.int)
+        c_idx = c_idx.astype(np.int)
+        if len(r_idx) > 0 and len(c_idx) > 0:
+            y_pred_label[r_idx, c_idx] = 0
+
+        #############################################################
+
         y_pred[idx_test] = np.argmax(y_pred_label, axis=1)
 
         print('Fold classification report:')
@@ -106,6 +128,7 @@ def main():
 
     n_train = pd.DataFrame(y_pred_label, index=data.index, columns=labels_names)
     pd.concat([y_pred, labels_ini], axis=1).to_csv('data/trainOVA-DES.txt', sep='|')
+
 
 if __name__ == '__main__':
     os.environ["PYTHONWARNINGS"] = "ignore::FutureWarning"
