@@ -84,3 +84,20 @@ Global classification report:
    macro avg       0.57      0.54      0.55    103230
 weighted avg       0.90      0.90      0.90    103230
 
+---------------------------------OVA-DES MODEL--------------------------------
+
+Global classification report:
+              precision    recall  f1-score   support
+
+ AGRICULTURE       0.70      0.46      0.55       338
+  INDUSTRIAL       0.67      0.61      0.64      4490
+      OFFICE       0.36      0.16      0.23      1828
+       OTHER       0.50      0.28      0.36      1332
+      PUBLIC       0.41      0.23      0.29      2976
+ RESIDENTIAL       0.93      0.98      0.96     90173
+      RETAIL       0.50      0.18      0.27      2093
+
+    accuracy                           0.90    103230
+   macro avg       0.58      0.41      0.47    103230
+weighted avg       0.88      0.90      0.89    103230
+

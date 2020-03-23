@@ -8,7 +8,7 @@ from imblearn.pipeline import Pipeline
 from imblearn.under_sampling import EditedNearestNeighbours
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import f1_score, classification_report
+from sklearn.metrics import f1_score, classification_report, make_scorer
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -62,7 +62,14 @@ def main():
     train = fillna(train)
     train = to_numeric(train)
 
-    
+    weights = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train_weights.cvs', sep='|', index_col='ID')
+    class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
+                    'INDUSTRIAL': 4.647398736012043e-05,
+                    'PUBLIC': 3.783937948148589e-05,
+                    'OFFICE': 4.558736182249404e-05,
+                    'RETAIL': 4.2627096025849134e-05,
+                    'AGRICULTURE': 6.261938403426534e-05,
+                    'OTHER': 3.8319803354362536e-05}
     # train, test, yy_train, yy_test = train_test_split(train, labels_ini, test_size=0.2, random_state=42)
 
     for label in progressbar.progressbar(np.unique(labels_ini)):
@@ -72,15 +79,24 @@ def main():
         else:
             labels = np.array([-1 if x == label else 1 for x in labels_ini])
 
+        class_weight = {}
+        if label == 'RESIDENTIAL':
+            class_weight[-1] = class_weights['RESIDENTIAL']
+            class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        else:
+            class_weight[1] = class_weights[label]
+            class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+
         X_train, X_test, y_train, y_test = train_test_split(train, labels, test_size=0.2, random_state=42)
+        # fit_params = {'clf__sample_weight': weights.loc[X_train.index].values.reshape(-1)}
 
         # Construct some pipelines
         pipe_rf = Pipeline([('scl', StandardScaler()),
-                            ('clf', RandomForestClassifier(random_state=42))])
+                            ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_rf_noisy = Pipeline([('scl', StandardScaler()),
                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                                  ('clf', RandomForestClassifier(random_state=42))])
+                                  ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_knn = Pipeline([('scl', StandardScaler()),
                              ('clf', KNeighborsClassifier())])
@@ -90,11 +106,11 @@ def main():
                                    ('clf', KNeighborsClassifier())])
 
         pipe_xgb = Pipeline([('scl', StandardScaler()),
-                             ('clf', XGBClassifier(random_state=42))])
+                             ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_xgb_noisy = Pipeline([('scl', StandardScaler()),
                                    ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                                   ('clf', XGBClassifier(random_state=42))])
+                                   ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
 
         # Set grid search params
         grid_params_rf = [{'clf__criterion': ['gini', 'entropy'],
@@ -112,7 +128,7 @@ def main():
                                 'clf__n_estimators': [400, 600, 900, 1200]}]
 
         # Construct grid searches
-        jobs = -1
+        jobs = 1
 
         gs_rf = RandomizedSearchCV(estimator=pipe_rf,
                                    param_distributions=grid_params_rf,
@@ -181,10 +197,13 @@ def main():
             y_pred = grids[idx].predict(X_test)
             # Test data accuracy of model with best params
             print('Test set metrics for best params:')
+            print('Normal clasification:')
             print(classification_report(y_test, y_pred))
+            print('Weighted clasification:')
+            print(classification_report(y_test, y_pred, sample_weight=weights.loc[X_test.index]))
             # Track best (highest test f1) model
-            if f1_score(y_test, y_pred) > best_f1:
-                best_f1 = f1_score(y_test, y_pred)
+            if f1_score(y_test, y_pred, sample_weight=weights.loc[X_test.index]) > best_f1:
+                best_f1 = f1_score(y_test, y_pred, sample_weight=weights.loc[X_test.index])
                 best_gs = grids[idx]
                 best_clf = idx
         print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
