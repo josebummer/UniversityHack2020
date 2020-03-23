@@ -15,6 +15,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
+from aux_scorer import get_weight_f1
 
 def prepare_data(pdata):
     data = pdata.copy()
@@ -54,7 +55,7 @@ def to_numeric(pdata):
 
 def main():
     # Load and split the data
-    train = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
+    train = pd.read_csv('data/train.txt', sep='|', index_col='ID')
     labels_ini = train.iloc[:, -1]
     train.drop('CLASE', axis=1, inplace=True)
 
@@ -62,7 +63,7 @@ def main():
     train = fillna(train)
     train = to_numeric(train)
 
-    weights = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train_weights.cvs', sep='|', index_col='ID')
+    weights = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
     class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
                     'INDUSTRIAL': 4.647398736012043e-05,
                     'PUBLIC': 3.783937948148589e-05,
@@ -70,6 +71,7 @@ def main():
                     'RETAIL': 4.2627096025849134e-05,
                     'AGRICULTURE': 6.261938403426534e-05,
                     'OTHER': 3.8319803354362536e-05}
+
     # train, test, yy_train, yy_test = train_test_split(train, labels_ini, test_size=0.2, random_state=42)
 
     for label in progressbar.progressbar(np.unique(labels_ini)):
@@ -87,6 +89,8 @@ def main():
             class_weight[1] = class_weights[label]
             class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
+        f1w_scorer = get_weight_f1(class_weight)
+
         X_train, X_test, y_train, y_test = train_test_split(train, labels, test_size=0.2, random_state=42)
         # fit_params = {'clf__sample_weight': weights.loc[X_train.index].values.reshape(-1)}
 
@@ -95,21 +99,21 @@ def main():
                             ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_rf_noisy = Pipeline([('scl', StandardScaler()),
-                                  ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
+                                  ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
                                   ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_knn = Pipeline([('scl', StandardScaler()),
                              ('clf', KNeighborsClassifier())])
 
         pipe_knn_noisy = Pipeline([('scl', StandardScaler()),
-                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
+                                   ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
                                    ('clf', KNeighborsClassifier())])
 
         pipe_xgb = Pipeline([('scl', StandardScaler()),
                              ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_xgb_noisy = Pipeline([('scl', StandardScaler()),
-                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
+                                   ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
                                    ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
 
         # Set grid search params
@@ -130,9 +134,10 @@ def main():
         # Construct grid searches
         jobs = 1
 
+
         gs_rf = RandomizedSearchCV(estimator=pipe_rf,
                                    param_distributions=grid_params_rf,
-                                   scoring='f1',
+                                   scoring=f1w_scorer,
                                    cv=5,
                                    n_jobs=jobs,
                                    n_iter=20)
