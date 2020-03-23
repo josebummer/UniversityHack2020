@@ -55,13 +55,13 @@ def to_numeric(pdata):
 
 def main():
     # Load and split the data
-    train = pd.read_csv('data/train.txt', sep='|', index_col='ID')
+    train = pd.read_csv('data/trainGuille.txt', sep='|', index_col='ID')
     labels_ini = train.iloc[:, -1]
     train.drop('CLASE', axis=1, inplace=True)
 
-    train = prepare_data(train)
-    train = fillna(train)
-    train = to_numeric(train)
+    # train = prepare_data(train)
+    # train = fillna(train)
+    # train = to_numeric(train)
 
     weights = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
     class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
@@ -134,7 +134,7 @@ def main():
                                 'clf__n_estimators': [400, 600, 900, 1200]}]
 
         # Construct grid searches
-        jobs = 1
+        jobs = -1
 
 
         gs_rf = RandomizedSearchCV(estimator=pipe_rf,
