@@ -99,21 +99,21 @@ def main():
                             ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_rf_noisy = Pipeline([('scl', StandardScaler()),
-                                  ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
+                                  ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
                                   ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_knn = Pipeline([('scl', StandardScaler()),
                              ('clf', KNeighborsClassifier())])
 
         pipe_knn_noisy = Pipeline([('scl', StandardScaler()),
-                                   ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
+                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
                                    ('clf', KNeighborsClassifier())])
 
         pipe_xgb = Pipeline([('scl', StandardScaler()),
                              ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
 
         pipe_xgb_noisy = Pipeline([('scl', StandardScaler()),
-                                   ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
+                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
                                    ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
 
         # Set grid search params
@@ -144,35 +144,35 @@ def main():
 
         gs_rf_noisy = RandomizedSearchCV(estimator=pipe_rf_noisy,
                                          param_distributions=grid_params_rf,
-                                         scoring='f1',
+                                         scoring=f1w_scorer,
                                          cv=5,
                                          n_jobs=jobs,
                                          n_iter=20)
 
         gs_knn = RandomizedSearchCV(estimator=pipe_knn,
                                     param_distributions=grid_params_knn,
-                                    scoring='f1',
+                                    scoring=f1w_scorer,
                                     cv=5,
                                     n_jobs=jobs,
                                     n_iter=20)
 
         gs_knn_noisy = RandomizedSearchCV(estimator=pipe_knn_noisy,
                                           param_distributions=grid_params_knn,
-                                          scoring='f1',
+                                          scoring=f1w_scorer,
                                           cv=5,
                                           n_jobs=jobs,
                                           n_iter=20)
 
         gs_xgb = RandomizedSearchCV(estimator=pipe_xgb,
                                     param_distributions=grid_params_xgboost,
-                                    scoring='f1',
+                                    scoring=f1w_scorer,
                                     cv=5,
                                     n_jobs=jobs,
                                     n_iter=20)
 
         gs_xgb_noisy = RandomizedSearchCV(estimator=pipe_xgb_noisy,
                                           param_distributions=grid_params_xgboost,
-                                          scoring='f1',
+                                          scoring=f1w_scorer,
                                           cv=5,
                                           n_jobs=jobs,
                                           n_iter=20)
