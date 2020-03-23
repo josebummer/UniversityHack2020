@@ -89,7 +89,9 @@ def main():
             class_weight[1] = class_weights[label]
             class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
-        f1w_scorer = get_weight_f1(class_weight)
+        # f1w_scorer = get_weight_f1(class_weight)
+        f1w = get_weight_f1(class_weight)
+        f1w_scorer = make_scorer(f1w)
 
         X_train, X_test, y_train, y_test = train_test_split(train, labels, test_size=0.2, random_state=42)
         # fit_params = {'clf__sample_weight': weights.loc[X_train.index].values.reshape(-1)}
