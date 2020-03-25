@@ -113,74 +113,162 @@ def main():
     #     with open('predictions/KNN.pkl', 'wb') as ofile:
     #         pickle.dump(y_pred, ofile)
 
-    print('---------------------------------Predict OVA MODEL--------------------------------')
+    # print('---------------------------------Predict OVA MODEL--------------------------------')
+    #
+    # data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/trainOVA.txt', sep='|', index_col='ID')
+    # labels_ini = data.iloc[:, -1]
+    # data.drop('CLASE', axis=1, inplace=True)
+    #
+    # y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
+    # best_params = {'n_estimators': 600, 'max_depth': 2, 'learning_rate': 0.1, 'n_jobs': -1}
+    #
+    # for i, (idx_train, idx_test) in enumerate(folds):
+    #     print('\nFold %d:' % i)
+    #
+    #     model = Pipeline([('scl', StandardScaler()),
+    #                       ('enn', EditedNearestNeighbours(sampling_strategy='majority', n_jobs=-1)),
+    #                       ('clf', XGBClassifier(**best_params))])
+    #
+    #     print('Training...')
+    #     model.fit(data.iloc[idx_train], labels_ini[idx_train])
+    #
+    #     print('Predicting...')
+    #     pred = model.predict(data.iloc[idx_test])
+    #
+    #     y_pred[idx_test] = pred
+    #
+    #     print('Fold classification report:')
+    #     print(classification_report(labels_ini.iloc[idx_test], y_pred[idx_test]))
+    #
+    # assert 0 not in np.unique(y_pred)
+    #
+    # print('Global classification report:')
+    # print(classification_report(labels_ini, y_pred))
+    #
+    # print('---------------------------------Raw + Predict OVA MODEL--------------------------------')
+    #
+    # data_raw = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
+    # data_raw.drop('CLASE', axis=1, inplace=True)
+    #
+    # data_raw = prepare_data(data_raw)
+    # data_raw = fillna(data_raw)
+    # data_raw = to_numeric(data_raw)
+    #
+    # data = pd.concat([data_raw, data], axis=1)
+    #
+    # y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
+    # best_params = {'n_estimators': 600, 'max_depth': 12, 'learning_rate': 0.4, 'n_jobs': -1}
+    #
+    # for i, (idx_train, idx_test) in enumerate(folds):
+    #     print('\nFold %d:' % i)
+    #
+    #     model = Pipeline([('scl', StandardScaler()),
+    #                       ('enn', EditedNearestNeighbours(sampling_strategy='majority', n_jobs=-1)),
+    #                       ('clf', XGBClassifier(**best_params))])
+    #
+    #     print('Training...')
+    #     model.fit(data.iloc[idx_train], labels_ini[idx_train])
+    #
+    #     print('Predicting...')
+    #     pred = model.predict(data.iloc[idx_test])
+    #
+    #     y_pred[idx_test] = pred
+    #
+    #     print('Fold classification report:')
+    #     print(classification_report(labels_ini.iloc[idx_test], y_pred[idx_test]))
+    #
+    # assert 0 not in np.unique(y_pred)
+    #
+    # print('Global classification report:')
+    # print(classification_report(labels_ini, y_pred))
 
-    data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/trainOVA.txt', sep='|', index_col='ID')
-    labels_ini = data.iloc[:, -1]
+    print('---------------------------------OVA-Weighted MODEL--------------------------------')
+    data = pd.read_csv('data/trainGuille.txt', sep='|', index_col='ID')
+    sample_weight = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
+    labels_ini = data['CLASE']
     data.drop('CLASE', axis=1, inplace=True)
 
-    y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
-    best_params = {'n_estimators': 600, 'max_depth': 2, 'learning_rate': 0.1, 'n_jobs': -1}
+    # data = prepare_data(data)
+    # data = fillna(data)
+    # data = to_numeric(data)
 
+    class_weights = {'RESIDENTIAL': 4.812552140340716e-06*data.shape[0],
+                     'INDUSTRIAL': 4.647398736012043e-05*data.shape[0],
+                     'PUBLIC': 3.783937948148589e-05*data.shape[0],
+                     'OFFICE': 4.558736182249404e-05*data.shape[0],
+                     'RETAIL': 4.2627096025849134e-05*data.shape[0],
+                     'AGRICULTURE': 6.261938403426534e-05*data.shape[0],
+                     'OTHER': 3.8319803354362536e-05*data.shape[0]}
+
+    y_pred = np.ones(labels_ini.shape[0], dtype=np.int) * -1
     for i, (idx_train, idx_test) in enumerate(folds):
         print('\nFold %d:' % i)
 
-        model = Pipeline([('scl', StandardScaler()),
-                          ('enn', EditedNearestNeighbours(sampling_strategy='majority', n_jobs=-1)),
-                          ('clf', XGBClassifier(**best_params))])
+        y_pred_label = []
+        for label in labels_names:
+            print('Load %s model:' % label)
 
-        print('Training...')
-        model.fit(data.iloc[idx_train], labels_ini[idx_train])
+            dump_file = './models_w_dg/' + label + '_best_gs_pipeline.pkl'
+            with open(dump_file, 'rb') as ofile:
+                grid = pickle.load(ofile)
 
-        print('Predicting...')
-        pred = model.predict(data.iloc[idx_test])
+            model = grid.best_estimator_
+            for step in model.steps:
+                if step[0] in ['enn', 'clf']:
+                    step[1].n_jobs = -1
 
-        y_pred[idx_test] = pred
+            # if label != 'RESIDENTIAL':
+            #     labels = np.array([1 if x == label else -1 for x in labels_ini])
+            # else:
+            #     labels = np.array([-1 if x == label else 1 for x in labels_ini])
+            labels = np.array([1 if x == label else -1 for x in labels_ini])
+
+            class_weight = {}
+            # if label == 'RESIDENTIAL':
+            #     class_weight[-1] = class_weights['RESIDENTIAL']
+            #     class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            # else:
+            #     class_weight[1] = class_weights[label]
+            #     class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            class_weight[1] = class_weights[label]
+            class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+
+            sample_weights_bin = np.array([class_weight[i] for i in labels[idx_test]])
+
+            print('Training...')
+            model.fit(data.iloc[idx_train], labels[idx_train])
+
+            print('Predicting...')
+            pred_proba = model.predict_proba(data.iloc[idx_test])
+            pred = model.predict(data.iloc[idx_test])
+
+            print('Local clasification report:')
+            print('Normal:')
+            print(classification_report(labels[idx_test], pred))
+            print('Weigthed:')
+            print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin))
+
+            # if label != 'RESIDENTIAL':
+            #     y_pred_label.append(pred_proba[:, 1])
+            # else:
+            #     y_pred_label.append(pred_proba[:, 0])
+            y_pred_label.append(pred_proba[:, 1])
+
+        y_pred[idx_test] = np.argmax(y_pred_label, axis=0)
 
         print('Fold classification report:')
-        print(classification_report(labels_ini.iloc[idx_test], y_pred[idx_test]))
+        print('Normal')
+        print(classification_report(labels_ini.iloc[idx_test], labels_names[y_pred[idx_test]]))
+        print('Weigthed:')
+        print(classification_report(labels_ini.iloc[idx_test], labels_names[y_pred[idx_test]], sample_weight=sample_weight.iloc[idx_test]))
 
-    assert 0 not in np.unique(y_pred)
-
-    print('Global classification report:')
-    print(classification_report(labels_ini, y_pred))
-
-    print('---------------------------------Raw + Predict OVA MODEL--------------------------------')
-
-    data_raw = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
-    data_raw.drop('CLASE', axis=1, inplace=True)
-
-    data_raw = prepare_data(data_raw)
-    data_raw = fillna(data_raw)
-    data_raw = to_numeric(data_raw)
-
-    data = pd.concat([data_raw, data], axis=1)
-
-    y_pred = np.zeros(labels_ini.shape[0], dtype=np.chararray)
-    best_params = {'n_estimators': 600, 'max_depth': 12, 'learning_rate': 0.4, 'n_jobs': -1}
-
-    for i, (idx_train, idx_test) in enumerate(folds):
-        print('\nFold %d:' % i)
-
-        model = Pipeline([('scl', StandardScaler()),
-                          ('enn', EditedNearestNeighbours(sampling_strategy='majority', n_jobs=-1)),
-                          ('clf', XGBClassifier(**best_params))])
-
-        print('Training...')
-        model.fit(data.iloc[idx_train], labels_ini[idx_train])
-
-        print('Predicting...')
-        pred = model.predict(data.iloc[idx_test])
-
-        y_pred[idx_test] = pred
-
-        print('Fold classification report:')
-        print(classification_report(labels_ini.iloc[idx_test], y_pred[idx_test]))
-
-    assert 0 not in np.unique(y_pred)
+    assert -1 not in np.unique(y_pred)
 
     print('Global classification report:')
-    print(classification_report(labels_ini, y_pred))
+    print('Normal:')
+    print(classification_report(labels_ini, labels_names[y_pred]))
+    print('Weigthed:')
+    print(classification_report(labels_ini, labels_names[y_pred], sample_weight=sample_weight))
 
 
 if __name__ == '__main__':

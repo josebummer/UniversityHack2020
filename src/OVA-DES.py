@@ -14,7 +14,7 @@ from xgboost import XGBClassifier
 
 
 def main():
-    data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID').iloc[:1000,]
+    data = pd.read_csv('data/train.txt', sep='|', index_col='ID').iloc[:1000, ]
     labels_ini = data.iloc[:, -1]
     data.drop('CLASE', axis=1, inplace=True)
 
@@ -23,6 +23,8 @@ def main():
     data = to_numeric(data)
 
     # data, test, labels_ini, y_test = train_test_split(data, labels_ini, test_size=0.9, random_state=42)
+
+    weights = pd.read_csv('data/train_weights.cvs.txt', sep='|', index_col='ID').iloc[:1000, ]
 
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
     folds = list(kf.split(data))
@@ -34,6 +36,14 @@ def main():
 
     alpha = 0.1
     k = 3 * 7
+
+    class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
+                     'INDUSTRIAL': 4.647398736012043e-05,
+                     'PUBLIC': 3.783937948148589e-05,
+                     'OFFICE': 4.558736182249404e-05,
+                     'RETAIL': 4.2627096025849134e-05,
+                     'AGRICULTURE': 6.261938403426534e-05,
+                     'OTHER': 3.8319803354362536e-05}
 
     print('---------------------------------OVA-DES MODEL--------------------------------')
     y_pred = np.ones(labels_ini.shape[0], dtype=np.int) * -1
@@ -58,6 +68,16 @@ def main():
             else:
                 labels = np.array([-1 if x == label else 1 for x in labels_ini])
 
+            class_weight = {}
+            if label == 'RESIDENTIAL':
+                class_weight[-1] = class_weights['RESIDENTIAL']
+                class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            else:
+                class_weight[1] = class_weights[label]
+                class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+
+            sample_weights_bin = np.array([class_weight[i] for i in labels[idx_test]])
+
             print('Training...')
             model.fit(data.iloc[idx_train], labels[idx_train])
 
@@ -66,7 +86,10 @@ def main():
             pred = model.predict(data.iloc[idx_test])
 
             print('Local clasification report:')
+            print('Normal')
             print(classification_report(labels[idx_test], pred))
+            print('Weigthed:')
+            print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin))
 
             if label != 'RESIDENTIAL':
                 y_pred_label.append(pred_proba[:, 1])

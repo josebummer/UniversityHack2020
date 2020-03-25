@@ -17,18 +17,18 @@ from sklearn.model_selection import KFold
 
 
 def main():
-    data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
+    data = pd.read_csv('data/trainGuille.txt', sep='|', index_col='ID')
 
     labels_ini = data.iloc[:, -1]
     data.drop('CLASE', axis=1, inplace=True)
 
-    data = prepare_data(data)
-    data = fillna(data)
-    data = to_numeric(data)
+    # data = prepare_data(data)
+    # data = fillna(data)
+    # data = to_numeric(data)
 
     labels_names = np.unique(labels_ini)
 
-    CREATE_DATA = False
+    CREATE_DATA = True
 
     if CREATE_DATA:
         print('Creating data...')
@@ -43,7 +43,7 @@ def main():
             for label in progressbar.progressbar(labels_names):
                 print('Load %s model:' % label)
 
-                dump_file = './models/' + label + '_best_gs_pipeline.pkl'
+                dump_file = './models_w_dg_factor/' + label + '_best_gs_pipeline.pkl'
                 with open(dump_file, 'rb') as ofile:
                     grid = pickle.load(ofile)
 
@@ -52,10 +52,11 @@ def main():
                     if step[0] in ['enn', 'clf']:
                         step[1].n_jobs = -1
 
-                if label != 'RESIDENTIAL':
-                    labels = np.array([1 if x == label else -1 for x in labels_ini])
-                else:
-                    labels = np.array([-1 if x == label else 1 for x in labels_ini])
+                # if label != 'RESIDENTIAL':
+                #     labels = np.array([1 if x == label else -1 for x in labels_ini])
+                # else:
+                #     labels = np.array([-1 if x == label else 1 for x in labels_ini])
+                labels = np.array([1 if x == label else -1 for x in labels_ini])
 
                 print('Training...')
                 model.fit(data.iloc[idx_train], labels[idx_train])
@@ -63,17 +64,18 @@ def main():
                 print('Predicting...')
                 pred_proba = model.predict_proba(data.iloc[idx_test])
 
-                if label != 'RESIDENTIAL':
-                    y_pred_label.append(pred_proba[:, 1])
-                else:
-                    y_pred_label.append(pred_proba[:, 0])
+                # if label != 'RESIDENTIAL':
+                #     y_pred_label.append(pred_proba[:, 1])
+                # else:
+                #     y_pred_label.append(pred_proba[:, 0])
+                y_pred_label.append(pred_proba[:, 1])
 
             y_pred[idx_test] = np.array(y_pred_label).T
 
         n_data = pd.DataFrame(y_pred, index=data.index, columns=labels_names)
 
         print('Save new train')
-        pd.concat([n_data, labels_ini], axis=1).to_csv('data/trainOVA.txt', sep='|')
+        pd.concat([n_data, labels_ini], axis=1).to_csv('data/trainOVA-factor.txt', sep='|')
     else:
         print('Load new data')
         n_data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/trainOVA.txt', sep='|', index_col='ID')
@@ -83,99 +85,99 @@ def main():
 
     ####################################################################################################################
 
-    X_train, X_test, y_train, y_test = train_test_split(n_data, labels_ini, test_size=0.2, random_state=42)
-
-    pipe_xgb = Pipeline([('scl', StandardScaler()),
-                         ('clf', XGBClassifier(random_state=42))])
-
-    pipe_xgb_noisy = Pipeline([('scl', StandardScaler()),
-                               ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                               ('clf', XGBClassifier(random_state=42))])
-
-    grid_params_xgboost = [{'clf__max_depth': [2, 6, 12, 18],
-                            'clf__learning_rate': [0.1, 0.15, 0.3, 0.4],
-                            'clf__n_estimators': [400, 600, 1000, 1200]}]
-
-    jobs = -1
-    gs_xgb = RandomizedSearchCV(estimator=pipe_xgb,
-                                param_distributions=grid_params_xgboost,
-                                scoring=make_scorer(f1_score, average='macro'),
-                                cv=5,
-                                n_jobs=jobs,
-                                n_iter=20)
-
-    gs_xgb_noisy = RandomizedSearchCV(estimator=pipe_xgb_noisy,
-                                      param_distributions=grid_params_xgboost,
-                                      scoring=make_scorer(f1_score, average='macro'),
-                                      cv=5,
-                                      n_jobs=jobs,
-                                      n_iter=20)
-
-    grids = [gs_xgb, gs_xgb_noisy]
-
-    # Dictionary of pipelines and classifier types for ease of reference
-    grid_dict = {0: 'XGB', 1: 'XGB w/ENN'}
-
-    # Fit the grid search objects
-    print('-------------------------------------------Only predict OVA------------------------------------------------')
-    print('Performing model optimizations...')
-    best_f1 = 0.0
-    best_clf = 0
-    for idx in progressbar.progressbar(range(len(grids))):
-        print('\nEstimator: %s' % grid_dict[idx])
-        # Fit grid search
-        grids[idx].fit(X_train, y_train)
-        # Best params
-        print('Best params: %s' % grids[idx].best_params_)
-        # Best training data accuracy
-        print('Best training f1: %.3f' % grids[idx].best_score_)
-        # Predict on test data with best params
-        model = grids[idx].best_estimator_
-        for step in model.steps:
-            if step[0] in ['enn', 'clf']:
-                step[1].n_jobs = -1
-        y_pred = model.predict(X_test)
-        # Test data accuracy of model with best params
-        print('Test set metrics for best params:')
-        print(classification_report(y_test, y_pred))
-        # Track best (highest test f1) model
-        if f1_score(y_test, y_pred, average='macro') > best_f1:
-            best_f1 = f1_score(y_test, y_pred, average='macro')
-            best_clf = idx
-    print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
-
-    ########################################################################################################################
-
-    n_data = pd.concat([data, n_data], axis=1)
-    X_train = n_data.loc[X_train.index]
-    X_test = n_data.loc[X_test.index]
-
-    print('--------------------------------------------OVA + Raw data-------------------------------------------------')
-    print('Performing model optimizations...')
-    best_f1 = 0.0
-    best_clf = 0
-    for idx in progressbar.progressbar(range(len(grids))):
-        print('\nEstimator: %s' % grid_dict[idx])
-        # Fit grid search
-        grids[idx].fit(X_train, y_train)
-        # Best params
-        print('Best params: %s' % grids[idx].best_params_)
-        # Best training data accuracy
-        print('Best training f1: %.3f' % grids[idx].best_score_)
-        # Predict on test data with best params
-        model = grids[idx].best_estimator_
-        for step in model.steps:
-            if step[0] in ['enn', 'clf']:
-                step[1].n_jobs = -1
-        y_pred = model.predict(X_test)
-        # Test data accuracy of model with best params
-        print('Test set metrics for best params:')
-        print(classification_report(y_test, y_pred))
-        # Track best (highest test f1) model
-        if f1_score(y_test, y_pred, average='macro') > best_f1:
-            best_f1 = f1_score(y_test, y_pred, average='macro')
-            best_clf = idx
-    print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
+    # X_train, X_test, y_train, y_test = train_test_split(n_data, labels_ini, test_size=0.2, random_state=42)
+    #
+    # pipe_xgb = Pipeline([('scl', StandardScaler()),
+    #                      ('clf', XGBClassifier(random_state=42))])
+    #
+    # pipe_xgb_noisy = Pipeline([('scl', StandardScaler()),
+    #                            ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
+    #                            ('clf', XGBClassifier(random_state=42))])
+    #
+    # grid_params_xgboost = [{'clf__max_depth': [2, 6, 12, 18],
+    #                         'clf__learning_rate': [0.1, 0.15, 0.3, 0.4],
+    #                         'clf__n_estimators': [400, 600, 1000, 1200]}]
+    #
+    # jobs = -1
+    # gs_xgb = RandomizedSearchCV(estimator=pipe_xgb,
+    #                             param_distributions=grid_params_xgboost,
+    #                             scoring=make_scorer(f1_score, average='macro'),
+    #                             cv=5,
+    #                             n_jobs=jobs,
+    #                             n_iter=20)
+    #
+    # gs_xgb_noisy = RandomizedSearchCV(estimator=pipe_xgb_noisy,
+    #                                   param_distributions=grid_params_xgboost,
+    #                                   scoring=make_scorer(f1_score, average='macro'),
+    #                                   cv=5,
+    #                                   n_jobs=jobs,
+    #                                   n_iter=20)
+    #
+    # grids = [gs_xgb, gs_xgb_noisy]
+    #
+    # # Dictionary of pipelines and classifier types for ease of reference
+    # grid_dict = {0: 'XGB', 1: 'XGB w/ENN'}
+    #
+    # # Fit the grid search objects
+    # print('-------------------------------------------Only predict OVA------------------------------------------------')
+    # print('Performing model optimizations...')
+    # best_f1 = 0.0
+    # best_clf = 0
+    # for idx in progressbar.progressbar(range(len(grids))):
+    #     print('\nEstimator: %s' % grid_dict[idx])
+    #     # Fit grid search
+    #     grids[idx].fit(X_train, y_train)
+    #     # Best params
+    #     print('Best params: %s' % grids[idx].best_params_)
+    #     # Best training data accuracy
+    #     print('Best training f1: %.3f' % grids[idx].best_score_)
+    #     # Predict on test data with best params
+    #     model = grids[idx].best_estimator_
+    #     for step in model.steps:
+    #         if step[0] in ['enn', 'clf']:
+    #             step[1].n_jobs = -1
+    #     y_pred = model.predict(X_test)
+    #     # Test data accuracy of model with best params
+    #     print('Test set metrics for best params:')
+    #     print(classification_report(y_test, y_pred))
+    #     # Track best (highest test f1) model
+    #     if f1_score(y_test, y_pred, average='macro') > best_f1:
+    #         best_f1 = f1_score(y_test, y_pred, average='macro')
+    #         best_clf = idx
+    # print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
+    #
+    # ########################################################################################################################
+    #
+    # n_data = pd.concat([data, n_data], axis=1)
+    # X_train = n_data.loc[X_train.index]
+    # X_test = n_data.loc[X_test.index]
+    #
+    # print('--------------------------------------------OVA + Raw data-------------------------------------------------')
+    # print('Performing model optimizations...')
+    # best_f1 = 0.0
+    # best_clf = 0
+    # for idx in progressbar.progressbar(range(len(grids))):
+    #     print('\nEstimator: %s' % grid_dict[idx])
+    #     # Fit grid search
+    #     grids[idx].fit(X_train, y_train)
+    #     # Best params
+    #     print('Best params: %s' % grids[idx].best_params_)
+    #     # Best training data accuracy
+    #     print('Best training f1: %.3f' % grids[idx].best_score_)
+    #     # Predict on test data with best params
+    #     model = grids[idx].best_estimator_
+    #     for step in model.steps:
+    #         if step[0] in ['enn', 'clf']:
+    #             step[1].n_jobs = -1
+    #     y_pred = model.predict(X_test)
+    #     # Test data accuracy of model with best params
+    #     print('Test set metrics for best params:')
+    #     print(classification_report(y_test, y_pred))
+    #     # Track best (highest test f1) model
+    #     if f1_score(y_test, y_pred, average='macro') > best_f1:
+    #         best_f1 = f1_score(y_test, y_pred, average='macro')
+    #         best_clf = idx
+    # print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
 
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@ from imblearn.pipeline import Pipeline
 from imblearn.base import BaseEstimator
 import numpy as np
 
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, accuracy_score
 class get_weight_f1:
         def __init__(self,class_weight):
             self.class_weight = class_weight
