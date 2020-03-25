@@ -25,7 +25,7 @@ def main():
     for label in labels_names:
         print('Load %s model:' % label)
 
-        dump_file = './models/' + label + '_best_gs_pipeline.pkl'
+        dump_file = './models_nw_dn/' + label + '_best_gs_pipeline.pkl'
         with open(dump_file, 'rb') as ofile:
             grid = pickle.load(ofile)
 
@@ -42,18 +42,24 @@ def main():
         print('Training...')
         model.fit(train, y_train)
 
-        pred_proba = model.predict_proba(test)
+        pred_proba = model.predict_proba(train)
 
         if label != 'RESIDENTIAL':
             y_pred_label.append(pred_proba[:, 1])
         else:
             y_pred_label.append(pred_proba[:, 0])
 
-    y_pred = labels_names[np.argmax(y_pred_label, axis=0)]
-    submit = {'ID': test.index, 'CLASE': y_pred}
-    df_submit = pd.DataFrame(data=submit)
+    n_data = pd.DataFrame(np.array(y_pred_label).T, index=train.index, columns=labels_names)
 
-    df_submit.to_csv('predictions/Minsait_UniversidadGranada_CodeDigger_1.txt', sep='|', index=False)
+    print('Save new train')
+    n_data.to_csv('data/trainOVA-fit.txt', sep='|')
+    # pd.concat([n_data, labels], axis=1).to_csv('data/trainOVA-fit.txt', sep='|')
+
+    # y_pred = labels_names[np.argmax(y_pred_label, axis=0)]
+    # submit = {'ID': test.index, 'CLASE': y_pred}
+    # df_submit = pd.DataFrame(data=submit)
+    #
+    # df_submit.to_csv('predictions/Minsait_UniversidadGranada_CodeDigger_1.txt', sep='|', index=False)
 
 if __name__ == '__main__':
     os.environ["PYTHONWARNINGS"] = "ignore::FutureWarning"
