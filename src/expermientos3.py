@@ -55,16 +55,16 @@ def to_numeric(pdata):
 
 def main():
     # Load and split the data
-    train = pd.read_csv('data/train.txt', sep='|', index_col='ID')
+    train = pd.read_csv('data/trainGuille.txt', sep='|', index_col='ID')
     labels_ini = train.iloc[:, -1]
     train.drop('CLASE', axis=1, inplace=True)
 
-    train = prepare_data(train)
-    train = fillna(train)
-    train = to_numeric(train)
+    # train = prepare_data(train)
+    # train = fillna(train)
+    # train = to_numeric(train)
 
     weights = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
-    class_weights = {'RESIDENTIAL': 4.812552140340716e-06*train.shape[0],
+    class_weights_factor = {'RESIDENTIAL': 4.812552140340716e-06*train.shape[0],
                     'INDUSTRIAL': 4.647398736012043e-05*train.shape[0],
                     'PUBLIC': 3.783937948148589e-05*train.shape[0],
                     'OFFICE': 4.558736182249404e-05*train.shape[0],
@@ -72,34 +72,51 @@ def main():
                     'AGRICULTURE': 6.261938403426534e-05*train.shape[0],
                     'OTHER': 3.8319803354362536e-05*train.shape[0]}
 
+    class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
+                            'INDUSTRIAL': 4.647398736012043e-05,
+                            'PUBLIC': 3.783937948148589e-05,
+                            'OFFICE': 4.558736182249404e-05,
+                            'RETAIL': 4.2627096025849134e-05,
+                            'AGRICULTURE': 6.261938403426534e-05,
+                            'OTHER': 3.8319803354362536e-05}
+
     # train, test, yy_train, yy_test = train_test_split(train, labels_ini, test_size=0.2, random_state=42)
 
     # SI SE CALCULAN LOS MODELOS CON PESOS, RESIDENTIAL VA NORMAL, SI SE CALCULAN SIN PESOS, RESIDENTIAL INVERTIDO.
     for label in progressbar.progressbar(np.unique(labels_ini)):
         print('\n--------------------OVA: %s vs All------------------' % label)
-        # if label != 'RESIDENTIAL':
-        #     labels = np.array([1 if x == label else -1 for x in labels_ini])
-        # else:
-        #     labels = np.array([-1 if x == label else 1 for x in labels_ini])
-        labels = np.array([1 if x == label else -1 for x in labels_ini])
+        if label != 'RESIDENTIAL':
+            labels = np.array([1 if x == label else -1 for x in labels_ini])
+        else:
+            labels = np.array([-1 if x == label else 1 for x in labels_ini])
 
         class_weight = {}
-        # if label == 'RESIDENTIAL':
-        #     class_weight[-1] = class_weights['RESIDENTIAL']
-        #     class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-        # else:
-        #     class_weight[1] = class_weights[label]
-        #     class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-        class_weight[1] = class_weights[label]
-        class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        if label == 'RESIDENTIAL':
+            class_weight[-1] = class_weights['RESIDENTIAL']
+            class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        else:
+            class_weight[1] = class_weights[label]
+            class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+
+        class_weight_factor = {}
+        if label == 'RESIDENTIAL':
+            class_weight_factor[-1] = class_weights['RESIDENTIAL']
+            class_weight_factor[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        else:
+            class_weight_factor[1] = class_weights[label]
+            class_weight_factor[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
         # f1w_scorer = get_weight_f1(class_weight)
         f1w = get_weight_f1(class_weight)
         f1w_scorer = make_scorer(f1w)
 
+        f1w_factor = get_weight_f1(class_weight_factor)
+        f1w_scorer_factor = make_scorer(f1w_factor)
+
         X_train, X_test, y_train, y_test = train_test_split(train, labels, test_size=0.2, random_state=42)
         # sample_weights_tr = np.array([class_weight[i] for i in y_train])
         sample_weights_tst = np.array([class_weight[i] for i in y_test])
+        sample_weights_tst_factor = np.array([class_weight_factor[i] for i in y_test])
 
         # Construct some pipelines
         pipe_rf = Pipeline([('scl', StandardScaler()),
@@ -144,42 +161,42 @@ def main():
 
         gs_rf = RandomizedSearchCV(estimator=pipe_rf,
                                    param_distributions=grid_params_rf,
-                                   scoring=f1w_scorer,
+                                   scoring='f1',
                                    cv=5,
                                    n_jobs=jobs,
                                    n_iter=20)
 
         gs_rf_noisy = RandomizedSearchCV(estimator=pipe_rf_noisy,
                                          param_distributions=grid_params_rf,
-                                         scoring=f1w_scorer,
+                                         scoring='f1',
                                          cv=5,
                                          n_jobs=jobs,
                                          n_iter=20)
 
         gs_knn = RandomizedSearchCV(estimator=pipe_knn,
                                     param_distributions=grid_params_knn,
-                                    scoring=f1w_scorer,
+                                    scoring='f1',
                                     cv=5,
                                     n_jobs=jobs,
                                     n_iter=20)
 
         gs_knn_noisy = RandomizedSearchCV(estimator=pipe_knn_noisy,
                                           param_distributions=grid_params_knn,
-                                          scoring=f1w_scorer,
+                                          scoring='f1',
                                           cv=5,
                                           n_jobs=jobs,
                                           n_iter=20)
 
         gs_xgb = RandomizedSearchCV(estimator=pipe_xgb,
                                     param_distributions=grid_params_xgboost,
-                                    scoring=f1w_scorer,
+                                    scoring='f1',
                                     cv=5,
                                     n_jobs=jobs,
                                     n_iter=20)
 
         gs_xgb_noisy = RandomizedSearchCV(estimator=pipe_xgb_noisy,
                                           param_distributions=grid_params_xgboost,
-                                          scoring=f1w_scorer,
+                                          scoring='f1',
                                           cv=5,
                                           n_jobs=jobs,
                                           n_iter=20)
@@ -213,15 +230,17 @@ def main():
             print(classification_report(y_test, y_pred))
             print('Weighted clasification:')
             print(classification_report(y_test, y_pred, sample_weight=sample_weights_tst))
+            print('Weighted clasification factor:')
+            print(classification_report(y_test, y_pred, sample_weight=sample_weights_tst_factor))
             # Track best (highest test f1) model
-            if f1_score(y_test, y_pred, sample_weight=sample_weights_tst) > best_f1:
-                best_f1 = f1_score(y_test, y_pred, sample_weight=sample_weights_tst)
+            if f1_score(y_test, y_pred) > best_f1:
+                best_f1 = f1_score(y_test, y_pred)
                 best_gs = grids[idx]
                 best_clf = idx
         print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
 
         # Save best grid search pipeline to file
-        dump_file = './models_w_dn_factor/' + label + '_best_gs_pipeline.pkl'
+        dump_file = './models_nw_dg/' + label + '_best_gs_pipeline.pkl'
         with open(dump_file, 'wb') as ofile:
             pickle.dump(best_gs, ofile)
         print('\nSaved %s grid search pipeline to file: %s' % (grid_dict[best_clf], dump_file))

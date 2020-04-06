@@ -64,13 +64,13 @@ def main():
     train = to_numeric(train)
 
     weights = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
-    class_weights = {'RESIDENTIAL': 4.812552140340716e-06*train.shape[0],
-                    'INDUSTRIAL': 4.647398736012043e-05*train.shape[0],
-                    'PUBLIC': 3.783937948148589e-05*train.shape[0],
-                    'OFFICE': 4.558736182249404e-05*train.shape[0],
-                    'RETAIL': 4.2627096025849134e-05*train.shape[0],
-                    'AGRICULTURE': 6.261938403426534e-05*train.shape[0],
-                    'OTHER': 3.8319803354362536e-05*train.shape[0]}
+    class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
+                    'INDUSTRIAL': 4.647398736012043e-05,
+                    'PUBLIC': 3.783937948148589e-05,
+                    'OFFICE': 4.558736182249404e-05,
+                    'RETAIL': 4.2627096025849134e-05,
+                    'AGRICULTURE': 6.261938403426534e-05,
+                    'OTHER': 3.8319803354362536e-05}
 
     # train, test, yy_train, yy_test = train_test_split(train, labels_ini, test_size=0.2, random_state=42)
 
@@ -221,7 +221,7 @@ def main():
         print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
 
         # Save best grid search pipeline to file
-        dump_file = './models_w_dn_factor/' + label + '_best_gs_pipeline.pkl'
+        dump_file = './models_w_dn/' + label + '_best_gs_pipeline.pkl'
         with open(dump_file, 'wb') as ofile:
             pickle.dump(best_gs, ofile)
         print('\nSaved %s grid search pipeline to file: %s' % (grid_dict[best_clf], dump_file))
