@@ -100,11 +100,11 @@ def main():
 
         class_weight_factor = {}
         if label == 'RESIDENTIAL':
-            class_weight_factor[-1] = class_weights['RESIDENTIAL']
-            class_weight_factor[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
+            class_weight_factor[1] = np.sum([class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
         else:
-            class_weight_factor[1] = class_weights[label]
-            class_weight_factor[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            class_weight_factor[1] = class_weights_factor[label]
+            class_weight_factor[-1] = np.sum([class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
 
         # f1w_scorer = get_weight_f1(class_weight)
         f1w = get_weight_f1(class_weight)
@@ -120,11 +120,11 @@ def main():
 
         # Construct some pipelines
         pipe_rf = Pipeline([('scl', StandardScaler()),
-                            ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
+                            ('clf', RandomForestClassifier(random_state=42))])
 
         pipe_rf_noisy = Pipeline([('scl', StandardScaler()),
                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                                  ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
+                                  ('clf', RandomForestClassifier(random_state=42))])
 
         pipe_knn = Pipeline([('scl', StandardScaler()),
                              ('clf', KNeighborsClassifier())])
@@ -134,11 +134,11 @@ def main():
                                    ('clf', KNeighborsClassifier())])
 
         pipe_xgb = Pipeline([('scl', StandardScaler()),
-                             ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
+                             ('clf', XGBClassifier(random_state=42))])
 
         pipe_xgb_noisy = Pipeline([('scl', StandardScaler()),
                                    ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                                   ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
+                                   ('clf', XGBClassifier(random_state=42))])
 
         # Set grid search params
         grid_params_rf = [{'clf__criterion': ['gini', 'entropy'],

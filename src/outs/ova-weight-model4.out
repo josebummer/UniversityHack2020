@@ -1,0 +1,73 @@
+---------------------------------OVA-Weighted MODEL--------------------------------
+
+Fold 0:
+Load AGRICULTURE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00     20577
+           1       0.94      0.42      0.58        69
+
+    accuracy                           1.00     20646
+   macro avg       0.97      0.71      0.79     20646
+weighted avg       1.00      1.00      1.00     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00 4.437639527659717
+           1       0.81      0.42      0.55 0.0043207374983643045
+
+    accuracy                           1.00 4.441960265158081
+   macro avg       0.90      0.71      0.78 4.441960265158081
+weighted avg       1.00      1.00      1.00 4.441960265158081
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00 458097.5284404593
+           1       0.81      0.42      0.55 446.02973195614675
+
+    accuracy                           1.00 458543.5581724154
+   macro avg       0.90      0.71      0.78 458543.5581724154
+weighted avg       1.00      1.00      1.00 458543.5581724154
+
+Load INDUSTRIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1       0.98      1.00      0.99     19726
+           1       0.85      0.54      0.66       920
+
+    accuracy                           0.98     20646
+   macro avg       0.91      0.77      0.82     20646
+weighted avg       0.97      0.98      0.97     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00 4.572596809117645
+           1       0.53      0.54      0.54 0.04275606837131091
+
+    accuracy                           0.99 4.615352877488956
+   macro avg       0.76      0.77      0.77 4.615352877488956
+weighted avg       0.99      0.99      0.99 4.615352877488956
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00 472029.16860499367
+           1       0.53      0.54      0.54 4413.708937970392
+
+    accuracy                           0.99 476442.87754296407
+   macro avg       0.76      0.77      0.77 476442.87754296407
+weighted avg       0.99      0.99      0.99 476442.87754296407
+
+Load OFFICE model:
+Training...
