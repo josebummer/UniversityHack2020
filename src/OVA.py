@@ -14,7 +14,7 @@ from xgboost import XGBClassifier
 
 
 def main():
-    data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/train.txt', sep='|', index_col='ID')
+    data = pd.read_csv('data/train.txt', sep='|', index_col='ID')
     labels_ini = data.iloc[:, -1]
     data.drop('CLASE', axis=1, inplace=True)
 
@@ -218,7 +218,7 @@ def main():
         for label in labels_names:
             print('Load %s model:' % label)
 
-            dump_file = './models_w_dn/' + label + '_best_gs_pipeline.pkl'
+            dump_file = './models_nw_dg/' + label + '_best_gs_pipeline.pkl'
             with open(dump_file, 'rb') as ofile:
                 grid = pickle.load(ofile)
 
@@ -227,31 +227,26 @@ def main():
                 if step[0] in ['enn', 'clf']:
                     step[1].n_jobs = -1
 
-            # if label != 'RESIDENTIAL':
-            #     labels = np.array([1 if x == label else -1 for x in labels_ini])
-            # else:
-            #     labels = np.array([-1 if x == label else 1 for x in labels_ini])
-            labels = np.array([1 if x == label else -1 for x in labels_ini])
+            if label != 'RESIDENTIAL':
+                labels = np.array([1 if x == label else -1 for x in labels_ini])
+            else:
+                labels = np.array([-1 if x == label else 1 for x in labels_ini])
 
             class_weight = {}
-            # if label == 'RESIDENTIAL':
-            #     class_weight[-1] = class_weights['RESIDENTIAL']
-            #     class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-            # else:
-            #     class_weight[1] = class_weights[label]
-            #     class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-            class_weight[1] = class_weights[label]
-            class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            if label == 'RESIDENTIAL':
+                class_weight[-1] = class_weights['RESIDENTIAL']
+                class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            else:
+                class_weight[1] = class_weights[label]
+                class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
             class_weight_factor = {}
-            # if label == 'RESIDENTIAL':
-            #     class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
-            #     class_weight_factor[1] = np.sum([class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-            # else:
-            #     class_weight_factor[1] = class_weights_factor[label]
-            #     class_weight_factor[-1] = np.sum([class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-            class_weight_factor[1] = class_weights_factor[label]
-            class_weight_factor[-1] = np.sum([class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
+            if label == 'RESIDENTIAL':
+                class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
+                class_weight_factor[1] = np.sum([class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
+            else:
+                class_weight_factor[1] = class_weights_factor[label]
+                class_weight_factor[-1] = np.sum([class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
 
             sample_weights_bin = np.array([class_weight[i] for i in labels[idx_test]])
             sample_weights_bin_factor = np.array([class_weight_factor[i] for i in labels[idx_test]])
@@ -271,11 +266,10 @@ def main():
             print('Weigthed factor:')
             print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin_factor))
 
-            # if label != 'RESIDENTIAL':
-            #     y_pred_label.append(pred_proba[:, 1])
-            # else:
-            #     y_pred_label.append(pred_proba[:, 0])
-            y_pred_label.append(pred_proba[:, 1])
+            if label != 'RESIDENTIAL':
+                y_pred_label.append(pred_proba[:, 1])
+            else:
+                y_pred_label.append(pred_proba[:, 0])
 
         y_pred[idx_test] = np.argmax(y_pred_label, axis=0)
 

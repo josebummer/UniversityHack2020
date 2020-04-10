@@ -3,6 +3,9 @@ import os
 import pandas as pd
 import pickle
 
+from expermientos1 import prepare_data, fillna, to_numeric
+
+
 def best_models_and_labels():
     train = pd.read_csv('data/train.txt', sep='|', index_col='ID')
 
@@ -36,6 +39,9 @@ def best_models_and_labels():
 
 
 def main():
+    #Si se usa train hay que llamar a los métodos de experimentos1 que se importan arriba.
+    #Si se hace con trainGuille no hace falta.
+
     models, labels = best_models_and_labels()
 
 
