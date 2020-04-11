@@ -208,7 +208,7 @@ def gen_varsel(m,x,y,cvs):
 
     prob = pg.problem(de_problem(m,x,y,cvs))
     algo = pg.algorithm(bin_estationary(gen= MERGE_EVERY, m=0.1))
-    algo.set_verbosity(10)
+    algo.set_verbosity(1)
 
     archi = pg.archipelago(
         N_ISLANDS,
@@ -231,7 +231,7 @@ def gen_varsel(m,x,y,cvs):
         #is cold?
         np_x = np.array(every_x)
         coldness = np_x.reshape((-1, np_x.shape[-1])).std(0).mean()
-        is_cold = coldness < 1e-10
+        is_cold = coldness < 1e-2
 
         if ((counter % SAVE_EVERY) == 0) or is_cold:
             # print("COLDNESS", coldness)
