@@ -44,6 +44,8 @@ def main():
 
     models, labels = best_models_and_labels()
 
+    print()
+
 
 if __name__ == '__main__':
     os.environ["PYTHONWARNINGS"] = "ignore::FutureWarning"
