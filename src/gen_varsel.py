@@ -303,17 +303,25 @@ def main():
     split = StratifiedShuffleSplit(n_splits=REPEAT_SPLIT,test_size=1/3,random_state=42)
     cvs = list(split.split(x,y))
 
-    gen_varsel(mod,x,y,cvs)
+    # gen_varsel(mod,x,y,cvs)
 
     # mod, xy_splits = enn_transform(mod,x,y,splits)
     # mod.set_params(**{'n_jobs':1})
-    # x_tr, x_ts, y_tr, y_ts = xy_splits[0]
 
-    # beg = time.time()
-    # mod.fit(x_tr,y_tr)
-    # print(classification_report(y_ts,mod.predict(x_ts)))
-    # elapsed = time.time()-beg
-    # print(f'time: {elapsed:.4f}')
+    for l in mod.steps:
+        if 'n_jobs' in l[1].get_params():
+            # print("L",l)
+            l[1].set_params(**{'n_jobs': 1})
+
+    tr_idx, ts_idx = cvs[0]
+    beg = time.time()
+    mod.fit(x[tr_idx],y[tr_idx])
+    yp = mod.predict(x[ts_idx])
+    print(classification_report(y[ts_idx],yp))
+    print(f1_score(y[ts_idx],yp,average='macro'))
+
+    elapsed = time.time()-beg
+    print(f'time: {elapsed:.4f}')
 
 
 

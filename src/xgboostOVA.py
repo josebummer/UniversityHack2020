@@ -43,7 +43,7 @@ def main():
             for label in progressbar.progressbar(labels_names):
                 print('Load %s model:' % label)
 
-                dump_file = './models_w_dg_factor/' + label + '_best_gs_pipeline.pkl'
+                dump_file = './1models_nw_dn/' + label + '_best_gs_pipeline.pkl'
                 with open(dump_file, 'rb') as ofile:
                     grid = pickle.load(ofile)
 
@@ -52,11 +52,11 @@ def main():
                     if step[0] in ['enn', 'clf']:
                         step[1].n_jobs = -1
 
-                # if label != 'RESIDENTIAL':
-                #     labels = np.array([1 if x == label else -1 for x in labels_ini])
-                # else:
-                #     labels = np.array([-1 if x == label else 1 for x in labels_ini])
-                labels = np.array([1 if x == label else -1 for x in labels_ini])
+                if label != 'RESIDENTIAL':
+                    labels = np.array([1 if x == label else -1 for x in labels_ini])
+                else:
+                    labels = np.array([-1 if x == label else 1 for x in labels_ini])
+                # labels = np.array([1 if x == label else -1 for x in labels_ini])
 
                 print('Training...')
                 model.fit(data.iloc[idx_train], labels[idx_train])
@@ -64,18 +64,18 @@ def main():
                 print('Predicting...')
                 pred_proba = model.predict_proba(data.iloc[idx_test])
 
-                # if label != 'RESIDENTIAL':
-                #     y_pred_label.append(pred_proba[:, 1])
-                # else:
-                #     y_pred_label.append(pred_proba[:, 0])
-                y_pred_label.append(pred_proba[:, 1])
+                if label != 'RESIDENTIAL':
+                    y_pred_label.append(pred_proba[:, 1])
+                else:
+                    y_pred_label.append(pred_proba[:, 0])
+                # y_pred_label.append(pred_proba[:, 1])
 
             y_pred[idx_test] = np.array(y_pred_label).T
 
         n_data = pd.DataFrame(y_pred, index=data.index, columns=labels_names)
 
         print('Save new train')
-        pd.concat([n_data, labels_ini], axis=1).to_csv('data/trainOVA-factor.txt', sep='|')
+        pd.concat([n_data, labels_ini], axis=1).to_csv('data/trainOVA.txt', sep='|')
     else:
         print('Load new data')
         n_data = pd.read_csv('/home/jose/Escritorio/datathon/src/data/trainOVA.txt', sep='|', index_col='ID')
