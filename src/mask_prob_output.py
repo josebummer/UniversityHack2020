@@ -16,14 +16,17 @@ import json
 #
 # CONFIG
 #
-OUT_LABEL = 'RESIDENTIAL_ONLY'
-# TODO load mask
-with open('./GEN_OUTPUT_RESIDENTIAL.json','r') as ifile:
-    j = json.load(ifile)
-mask = j['best_x'][np.argmin(j['best_f'])]
-mask = np.array(mask,dtype=np.bool)
+OUT_LABEL = 'EVERY_MASK'
+mask_list = []
+for m in ["AGRICULTURE","INDUSTRIAL","OFFICE","OTHER","PUBLIC","RESIDENTIAL","RETAIL"]:
+    with open(f'./GEN_OUTPUT_{m}.json', 'r') as ifile:
+        j = json.load(ifile)
+    mask = j['best_x'][np.argmin(j['best_f'])]
+    mask = np.array(mask, dtype=np.bool)
+    mask_list.append((m,mask))
 
-mask_dict = dict([(m,mask) for m in ["AGRICULTURE","INDUSTRIAL","OFFICE","OTHER","PUBLIC","RESIDENTIAL","RETAIL"]])
+mask_dict = dict(mask_list)
+# mask_dict = dict([(m,mask) for m in ["AGRICULTURE","INDUSTRIAL","OFFICE","OTHER","PUBLIC","RESIDENTIAL","RETAIL"]])
 
 def main():
     data = pd.read_csv('data/train.txt', sep='|', index_col='ID')
