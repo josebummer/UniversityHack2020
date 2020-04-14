@@ -9,12 +9,16 @@ from scipy.optimize import differential_evolution
 
 import progressbar
 
+final_text = []
+
 #
 # Load data
 #
 
 # Load data
-X = pd.read_csv('data/train_mask_RESIDENTIAL_ONLY.txt',sep='|',index_col='ID')
+# X = pd.read_csv('data/train_mask_RESIDENTIAL_ONLY.txt',sep='|',index_col='ID')
+IN_PATH = "data/train_mask_EVERY_MASK.txt"
+X = pd.read_csv(IN_PATH,sep='|',index_col='ID')
 y = X.iloc[:,-1]
 X = X.drop(columns=[y.name])
 cols = X.columns
@@ -52,6 +56,7 @@ class_weight *= factor/class_weight.sum()
 class_weight = np.insert(class_weight,5,1-factor)
 
 print(class_weight/c_true)
+final_text+= ["# Class weight",class_weight/c_true]
 
 y_weights = (class_weight/c_true)[y]
 
@@ -59,8 +64,9 @@ y_weights = (class_weight/c_true)[y]
 # Uncalibrated score
 #
 
-print(classification_report(y,X.argmax(1),target_names=le.classes_,digits=3,sample_weight=y_weights))
-
+cr = classification_report(y,X.argmax(1),target_names=le.classes_,digits=3,sample_weight=y_weights)
+print(cr)
+final_text+= ["# Without calibration",cr]
 #
 # Calibrate prob
 #
@@ -85,4 +91,9 @@ for tr_idx,ts_idx in progressbar.progressbar(cv):
         args=[X[tr_idx],y[tr_idx],y_weights[tr_idx]])
     ypred2[ts_idx] = predict2(de.x,X[ts_idx])
 
-print(classification_report(y,ypred2,target_names=le.classes_,digits=3,sample_weight=y_weights))
+cr = classification_report(y,ypred2,target_names=le.classes_,digits=3,sample_weight=y_weights)
+print(cr)
+final_text+= ["# With calibration",cr]
+
+with open(f'{IN_PATH}_result.txt','w') as ofile:
+    ofile.write("\n".join(map(str,final_text+[""])))
