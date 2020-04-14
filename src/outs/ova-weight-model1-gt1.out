@@ -1,0 +1,1694 @@
+---------------------------------OVA-Weighted-Genetic MODEL--------------------------------
+
+Fold 0:
+Load AGRICULTURE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.999     0.999     20578
+           1      0.704     0.735     0.719        68
+
+    accuracy                          0.998     20646
+   macro avg      0.852     0.867     0.859     20646
+weighted avg      0.998     0.998     0.998     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 4.437855187839902
+           1      0.409     0.735     0.525 0.004258118114330039
+
+    accuracy                          0.999 4.442113305954232
+   macro avg      0.704     0.867     0.762 4.442113305954232
+weighted avg      0.999     0.999     0.999 4.442113305954232
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 458119.79104085977
+           1      0.409     0.735     0.525 439.56553294228956
+
+    accuracy                          0.999 458559.35657380207
+   macro avg      0.704     0.867     0.762 458559.35657380207
+weighted avg      0.999     0.999     0.999 458559.35657380207
+
+Load INDUSTRIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.986     0.986     0.986     19724
+           1      0.698     0.693     0.696       922
+
+    accuracy                          0.973     20646
+   macro avg      0.842     0.840     0.841     20646
+weighted avg      0.973     0.973     0.973     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.992 4.572133197963927
+           1      0.317     0.693     0.435 0.04284901634603115
+
+    accuracy                          0.983 4.614982214309959
+   macro avg      0.657     0.840     0.713 4.614982214309959
+weighted avg      0.991     0.983     0.986 4.614982214309959
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.992 471981.3100255954
+           1      0.317     0.693     0.435 4423.303957400762
+
+    accuracy                          0.983 476404.6139829962
+   macro avg      0.657     0.840     0.713 476404.6139829962
+weighted avg      0.991     0.983     0.986 476404.6139829962
+
+Load OFFICE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.987     0.991     0.989     20267
+           1      0.378     0.296     0.332       379
+
+    accuracy                          0.978     20646
+   macro avg      0.683     0.643     0.660     20646
+weighted avg      0.976     0.978     0.977     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.991     0.994 4.715972865967266
+           1      0.107     0.296     0.157 0.01727761013072523
+
+    accuracy                          0.988 4.733250476097991
+   macro avg      0.552     0.643     0.575 4.733250476097991
+weighted avg      0.994     0.988     0.991 4.733250476097991
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.991     0.994 486829.8789538617
+           1      0.107     0.296     0.157 1783.5676937947583
+
+    accuracy                          0.988 488613.4466476565
+   macro avg      0.552     0.643     0.575 488613.4466476565
+weighted avg      0.994     0.988     0.991 488613.4466476565
+
+Load OTHER model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.992     0.996     0.994     20373
+           1      0.588     0.418     0.488       273
+
+    accuracy                          0.988     20646
+   macro avg      0.790     0.707     0.741     20646
+weighted avg      0.987     0.988     0.987     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.996     0.997 4.88870020809363
+           1      0.185     0.418     0.257 0.010461306315740944
+
+    accuracy                          0.995 4.899161514409371
+   macro avg      0.592     0.707     0.627 4.899161514409371
+weighted avg      0.997     0.995     0.996 4.899161514409371
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.996     0.997 504660.5224813533
+           1      0.185     0.418     0.257 1079.920650973944
+
+    accuracy                          0.995 505740.44313232723
+   macro avg      0.592     0.707     0.627 505740.44313232723
+weighted avg      0.997     0.995     0.996 505740.44313232723
+
+Load PUBLIC model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.979     0.986     0.983     20035
+           1      0.406     0.321     0.358       611
+
+    accuracy                          0.966     20646
+   macro avg      0.693     0.653     0.670     20646
+weighted avg      0.962     0.966     0.964     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.991 4.817219101213141
+           1      0.097     0.321     0.149 0.0231198608631878
+
+    accuracy                          0.982 4.840338962076329
+   macro avg      0.547     0.653     0.570 4.840338962076329
+weighted avg      0.992     0.982     0.987 4.840338962076329
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.991 497281.52781818673
+           1      0.097     0.321     0.149 2386.663236906892
+
+    accuracy                          0.982 499668.1910550936
+   macro avg      0.547     0.653     0.570 499668.1910550936
+weighted avg      0.992     0.982     0.987 499668.1910550936
+
+Load RESIDENTIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.955     0.963     0.959     17957
+           1      0.738     0.695     0.716      2689
+
+    accuracy                          0.928     20646
+   macro avg      0.846     0.829     0.837     20646
+weighted avg      0.926     0.928     0.927     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.271     0.963     0.423 0.0864189987840912
+           1      0.994     0.695     0.818 0.7353527954792691
+
+    accuracy                          0.723 0.8217717942633603
+   macro avg      0.632     0.829     0.620 0.8217717942633603
+weighted avg      0.918     0.723     0.776 0.8217717942633603
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.271     0.963     0.423 8921.033244484664
+           1      0.994     0.695     0.818 75910.46907732694
+
+    accuracy                          0.723 84831.5023218116
+   macro avg      0.632     0.829     0.620 84831.5023218116
+weighted avg      0.918     0.723     0.776 84831.5023218116
+
+Load RETAIL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.983     0.997     0.990     20210
+           1      0.586     0.218     0.318       436
+
+    accuracy                          0.980     20646
+   macro avg      0.785     0.607     0.654     20646
+weighted avg      0.975     0.980     0.976     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 4.762536382183553
+           1      0.204     0.218     0.211 0.01858541386727026
+
+    accuracy                          0.994 4.781121796050823
+   macro avg      0.601     0.607     0.604 4.781121796050823
+weighted avg      0.994     0.994     0.994 4.781121796050823
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 491636.63073254994
+           1      0.204     0.218     0.211 1918.5722735183151
+
+    accuracy                          0.994 493555.20300606824
+   macro avg      0.601     0.607     0.604 493555.20300606824
+weighted avg      0.994     0.994     0.994 493555.20300606824
+
+Fold classification report:
+Normal
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.710     0.721     0.715        68
+  INDUSTRIAL      0.689     0.704     0.696       922
+      OFFICE      0.394     0.222     0.284       379
+       OTHER      0.579     0.469     0.518       273
+      PUBLIC      0.408     0.354     0.379       611
+ RESIDENTIAL      0.948     0.977     0.962     17957
+      RETAIL      0.593     0.220     0.321       436
+
+    accuracy                          0.909     20646
+   macro avg      0.617     0.524     0.554     20646
+weighted avg      0.897     0.909     0.901     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.837     0.721     0.775 0.004258118114330039
+  INDUSTRIAL      0.776     0.704     0.738 0.04284901634603115
+      OFFICE      0.531     0.222     0.313 0.01727761013072523
+       OTHER      0.681     0.469     0.555 0.010461306315740944
+      PUBLIC      0.548     0.354     0.430 0.0231198608631878
+ RESIDENTIAL      0.675     0.977     0.798 0.0864189987840912
+      RETAIL      0.685     0.220     0.333 0.01858541386727026
+
+    accuracy                          0.683 0.20297032442137664
+   macro avg      0.676     0.524     0.563 0.20297032442137664
+weighted avg      0.674     0.683     0.647 0.20297032442137664
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.837     0.721     0.775 439.56553294228956
+  INDUSTRIAL      0.776     0.704     0.738 4423.303957400762
+      OFFICE      0.531     0.222     0.313 1783.5676937947585
+       OTHER      0.681     0.469     0.555 1079.920650973944
+      PUBLIC      0.548     0.354     0.430 2386.663236906892
+ RESIDENTIAL      0.675     0.977     0.798 8921.033244484664
+      RETAIL      0.685     0.220     0.333 1918.572273518315
+
+    accuracy                          0.683 20952.626590021624
+   macro avg      0.676     0.524     0.563 20952.626590021624
+weighted avg      0.674     0.683     0.647 20952.626590021624
+
+
+Fold 1:
+Load AGRICULTURE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.999     0.999     20581
+           1      0.609     0.646     0.627        65
+
+    accuracy                          0.998     20646
+   macro avg      0.804     0.822     0.813     20646
+weighted avg      0.998     0.998     0.998     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 4.438502168380457
+           1      0.311     0.646     0.420 0.004070259962227244
+
+    accuracy                          0.998 4.442572428342684
+   macro avg      0.655     0.822     0.710 4.442572428342684
+weighted avg      0.999     0.998     0.999 4.442572428342684
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 458186.5788420612
+           1      0.311     0.646     0.420 420.172935900718
+
+    accuracy                          0.998 458606.75177796197
+   macro avg      0.655     0.822     0.710 458606.75177796197
+weighted avg      0.999     0.998     0.999 458606.75177796197
+
+Load INDUSTRIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.986     0.986     0.986     19732
+           1      0.691     0.698     0.695       914
+
+    accuracy                          0.973     20646
+   macro avg      0.839     0.842     0.840     20646
+weighted avg      0.973     0.973     0.973     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.991 4.573987642578798
+           1      0.310     0.698     0.429 0.04247722444715017
+
+    accuracy                          0.983 4.6164648670259485
+   macro avg      0.653     0.842     0.710 4.6164648670259485
+weighted avg      0.991     0.983     0.986 4.6164648670259485
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.991 472172.7443431884
+           1      0.310     0.698     0.429 4384.923879679283
+
+    accuracy                          0.983 476557.6682228677
+   macro avg      0.653     0.842     0.710 476557.6682228677
+weighted avg      0.991     0.983     0.986 476557.6682228677
+
+Load OFFICE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.989     0.991     0.990     20305
+           1      0.375     0.320     0.345       341
+
+    accuracy                          0.980     20646
+   macro avg      0.682     0.655     0.667     20646
+weighted avg      0.978     0.980     0.979     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.998     0.991     0.994 4.724815169658325
+           1      0.105     0.320     0.158 0.015545290381470414
+
+    accuracy                          0.989 4.7403604600397955
+   macro avg      0.551     0.655     0.576 4.7403604600397955
+weighted avg      0.995     0.989     0.992 4.7403604600397955
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.998     0.991     0.994 487742.66996389016
+           1      0.105     0.320     0.158 1604.740326079191
+
+    accuracy                          0.989 489347.41028996935
+   macro avg      0.551     0.655     0.576 489347.41028996935
+weighted avg      0.995     0.989     0.992 489347.41028996935
+
+Load OTHER model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.993     0.995     0.994     20380
+           1      0.543     0.451     0.493       266
+
+    accuracy                          0.988     20646
+   macro avg      0.768     0.723     0.743     20646
+weighted avg      0.987     0.988     0.987     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.995     0.997 4.89037992641968
+           1      0.159     0.451     0.236 0.010193067692260407
+
+    accuracy                          0.994 4.900572994111941
+   macro avg      0.579     0.723     0.616 4.900572994111941
+weighted avg      0.997     0.994     0.995 4.900572994111941
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.995     0.997 504833.9198041516
+           1      0.159     0.451     0.236 1052.2303778720486
+
+    accuracy                          0.994 505886.15018202364
+   macro avg      0.579     0.723     0.616 505886.15018202364
+weighted avg      0.997     0.994     0.995 505886.15018202364
+
+Load PUBLIC model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.980     0.988     0.984     20039
+           1      0.455     0.320     0.376       607
+
+    accuracy                          0.969     20646
+   macro avg      0.717     0.654     0.680     20646
+weighted avg      0.964     0.969     0.966     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.988     0.993 4.81818086195209
+           1      0.116     0.320     0.171 0.02296850334526186
+
+    accuracy                          0.985 4.841149365297352
+   macro avg      0.557     0.654     0.582 4.841149365297352
+weighted avg      0.993     0.985     0.989 4.841149365297352
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.988     0.993 497380.8103792684
+           1      0.116     0.320     0.171 2371.038600331396
+
+    accuracy                          0.985 499751.84897959983
+   macro avg      0.557     0.654     0.582 499751.84897959983
+weighted avg      0.993     0.985     0.989 499751.84897959983
+
+Load RESIDENTIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.956     0.962     0.959     18015
+           1      0.725     0.694     0.709      2631
+
+    accuracy                          0.927     20646
+   macro avg      0.840     0.828     0.834     20646
+weighted avg      0.926     0.927     0.927     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.274     0.962     0.427 0.08669812680823094
+           1      0.993     0.694     0.817 0.7194917087787143
+
+    accuracy                          0.722 0.8061898355869452
+   macro avg      0.634     0.828     0.622 0.8061898355869452
+weighted avg      0.916     0.722     0.775 0.8061898355869452
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.274     0.962     0.427 8949.847630416629
+           1      0.993     0.694     0.817 74273.12909722811
+
+    accuracy                          0.722 83222.97672764474
+   macro avg      0.634     0.828     0.622 83222.97672764474
+weighted avg      0.916     0.722     0.775 83222.97672764474
+
+Load RETAIL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.983     0.998     0.990     20208
+           1      0.640     0.199     0.303       438
+
+    accuracy                          0.981     20646
+   macro avg      0.811     0.598     0.647     20646
+weighted avg      0.976     0.981     0.976     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.998     0.997 4.762065077247167
+           1      0.243     0.199     0.219 0.018670668059321962
+
+    accuracy                          0.994 4.7807357453064885
+   macro avg      0.620     0.598     0.608 4.7807357453064885
+weighted avg      0.994     0.994     0.994 4.7807357453064885
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.998     0.997 491587.9779239668
+           1      0.243     0.199     0.219 1927.373063763812
+
+    accuracy                          0.994 493515.35098773066
+   macro avg      0.620     0.598     0.608 493515.35098773066
+weighted avg      0.994     0.994     0.994 493515.35098773066
+
+Fold classification report:
+Normal
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.567     0.585     0.576        65
+  INDUSTRIAL      0.672     0.691     0.681       914
+      OFFICE      0.393     0.270     0.320       341
+       OTHER      0.512     0.477     0.494       266
+      PUBLIC      0.433     0.354     0.390       607
+ RESIDENTIAL      0.950     0.976     0.963     18015
+      RETAIL      0.600     0.212     0.314       438
+
+    accuracy                          0.910     20646
+   macro avg      0.590     0.509     0.534     20646
+weighted avg      0.899     0.910     0.902     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.757     0.585     0.660 0.004070259962227244
+  INDUSTRIAL      0.752     0.691     0.720 0.04247722444715017
+      OFFICE      0.544     0.270     0.361 0.015545290381470414
+       OTHER      0.616     0.477     0.538 0.010193067692260407
+      PUBLIC      0.592     0.354     0.443 0.02296850334526186
+ RESIDENTIAL      0.685     0.976     0.805 0.08669812680823094
+      RETAIL      0.716     0.212     0.328 0.018670668059321962
+
+    accuracy                          0.686 0.200623140695923
+   macro avg      0.666     0.509     0.551 0.200623140695923
+weighted avg      0.678     0.686     0.650 0.200623140695923
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.757     0.585     0.660 420.172935900718
+  INDUSTRIAL      0.752     0.691     0.720 4384.923879679283
+      OFFICE      0.544     0.270     0.361 1604.740326079191
+       OTHER      0.616     0.477     0.538 1052.2303778720486
+      PUBLIC      0.592     0.354     0.443 2371.038600331396
+ RESIDENTIAL      0.685     0.976     0.805 8949.847630416629
+      RETAIL      0.716     0.212     0.328 1927.373063763812
+
+    accuracy                          0.686 20710.326814043077
+   macro avg      0.666     0.509     0.551 20710.326814043077
+weighted avg      0.678     0.686     0.650 20710.326814043077
+
+
+Fold 2:
+Load AGRICULTURE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.999     0.999     20577
+           1      0.676     0.696     0.686        69
+
+    accuracy                          0.998     20646
+   macro avg      0.838     0.847     0.842     20646
+weighted avg      0.998     0.998     0.998     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 4.437639527659717
+           1      0.377     0.696     0.489 0.0043207374983643045
+
+    accuracy                          0.999 4.441960265158081
+   macro avg      0.689     0.847     0.744 4.441960265158081
+weighted avg      0.999     0.999     0.999 4.441960265158081
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 458097.5284404593
+           1      0.377     0.696     0.489 446.02973195614675
+
+    accuracy                          0.999 458543.5581724154
+   macro avg      0.689     0.847     0.744 458543.5581724154
+weighted avg      0.999     0.999     0.999 458543.5581724154
+
+Load INDUSTRIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.987     0.987     0.987     19773
+           1      0.707     0.715     0.711       873
+
+    accuracy                          0.975     20646
+   macro avg      0.847     0.851     0.849     20646
+weighted avg      0.976     0.975     0.976     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 4.5834916712300116
+           1      0.327     0.715     0.448 0.04057179096538515
+
+    accuracy                          0.985 4.624063462195397
+   macro avg      0.662     0.851     0.720 4.624063462195397
+weighted avg      0.992     0.985     0.987 4.624063462195397
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 473153.8452208525
+           1      0.327     0.715     0.448 4188.225981356707
+
+    accuracy                          0.985 477342.0712022092
+   macro avg      0.662     0.851     0.720 477342.0712022092
+weighted avg      0.992     0.985     0.987 477342.0712022092
+
+Load OFFICE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.986     0.992     0.989     20269
+           1      0.380     0.252     0.303       377
+
+    accuracy                          0.979     20646
+   macro avg      0.683     0.622     0.646     20646
+weighted avg      0.975     0.979     0.977     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.992     0.995 4.716438250372058
+           1      0.107     0.252     0.150 0.01718643540708024
+
+    accuracy                          0.990 4.733624685779138
+   macro avg      0.552     0.622     0.573 4.733624685779138
+weighted avg      0.994     0.990     0.992 4.733624685779138
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.992     0.995 486877.9205859685
+           1      0.107     0.252     0.150 1774.1557270728867
+
+    accuracy                          0.990 488652.0763130414
+   macro avg      0.552     0.622     0.573 488652.0763130414
+weighted avg      0.994     0.990     0.992 488652.0763130414
+
+Load OTHER model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.993     0.997     0.995     20380
+           1      0.629     0.440     0.518       266
+
+    accuracy                          0.989     20646
+   macro avg      0.811     0.718     0.756     20646
+weighted avg      0.988     0.989     0.989     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.997     0.998 4.89037992641968
+           1      0.213     0.440     0.287 0.010193067692260407
+
+    accuracy                          0.995 4.900572994111941
+   macro avg      0.606     0.718     0.642 4.900572994111941
+weighted avg      0.997     0.995     0.996 4.900572994111941
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.997     0.998 504833.9198041516
+           1      0.213     0.440     0.287 1052.2303778720486
+
+    accuracy                          0.995 505886.15018202364
+   macro avg      0.606     0.718     0.642 505886.15018202364
+weighted avg      0.997     0.995     0.996 505886.15018202364
+
+Load PUBLIC model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.980     0.987     0.983     20038
+           1      0.431     0.324     0.370       608
+
+    accuracy                          0.967     20646
+   macro avg      0.705     0.656     0.677     20646
+weighted avg      0.963     0.967     0.965     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 4.817940421767353
+           1      0.107     0.324     0.160 0.023006342724743344
+
+    accuracy                          0.984 4.840946764492096
+   macro avg      0.552     0.656     0.576 4.840946764492096
+weighted avg      0.993     0.984     0.988 4.840946764492096
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 497355.989738998
+           1      0.107     0.324     0.160 2374.94475947527
+
+    accuracy                          0.984 499730.93449847325
+   macro avg      0.552     0.656     0.576 499730.93449847325
+weighted avg      0.993     0.984     0.988 499730.93449847325
+
+Load RESIDENTIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.955     0.963     0.959     18041
+           1      0.726     0.684     0.704      2605
+
+    accuracy                          0.928     20646
+   macro avg      0.841     0.823     0.832     20646
+weighted avg      0.926     0.928     0.927     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.271     0.963     0.422 0.08682325316387979
+           1      0.993     0.684     0.810 0.7123815664646724
+
+    accuracy                          0.714 0.7992048196285522
+   macro avg      0.632     0.823     0.616 0.7992048196285522
+weighted avg      0.915     0.714     0.768 0.7992048196285522
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.271     0.963     0.422 8962.764424110268
+           1      0.993     0.684     0.810 73539.14910614933
+
+    accuracy                          0.714 82501.9135302596
+   macro avg      0.632     0.823     0.616 82501.9135302596
+weighted avg      0.915     0.714     0.768 82501.9135302596
+
+Load RETAIL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.984     0.997     0.990     20234
+           1      0.557     0.189     0.283       412
+
+    accuracy                          0.981     20646
+   macro avg      0.770     0.593     0.636     20646
+weighted avg      0.975     0.981     0.976     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 4.768192041420191
+           1      0.185     0.189     0.187 0.01756236356264985
+
+    accuracy                          0.994 4.785754404982841
+   macro avg      0.591     0.593     0.592 4.785754404982841
+weighted avg      0.994     0.994     0.994 4.785754404982841
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 492220.46443554724
+           1      0.185     0.189     0.187 1812.9627905723517
+
+    accuracy                          0.994 494033.4272261196
+   macro avg      0.591     0.593     0.592 494033.4272261196
+weighted avg      0.994     0.994     0.994 494033.4272261196
+
+Fold classification report:
+Normal
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.681     0.710     0.695        69
+  INDUSTRIAL      0.699     0.721     0.710       873
+      OFFICE      0.363     0.204     0.261       377
+       OTHER      0.589     0.474     0.525       266
+      PUBLIC      0.443     0.365     0.400       608
+ RESIDENTIAL      0.948     0.978     0.963     18041
+      RETAIL      0.510     0.187     0.274       412
+
+    accuracy                          0.911     20646
+   macro avg      0.605     0.520     0.547     20646
+weighted avg      0.898     0.911     0.902     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.838     0.710     0.769 0.0043207374983643045
+  INDUSTRIAL      0.780     0.721     0.749 0.04057179096538515
+      OFFICE      0.501     0.204     0.290 0.01718643540708024
+       OTHER      0.698     0.474     0.564 0.010193067692260407
+      PUBLIC      0.599     0.365     0.454 0.023006342724743344
+ RESIDENTIAL      0.676     0.978     0.800 0.08682325316387979
+      RETAIL      0.642     0.187     0.290 0.01756236356264985
+
+    accuracy                          0.687 0.19966399101436308
+   macro avg      0.676     0.520     0.559 0.19966399101436308
+weighted avg      0.675     0.687     0.648 0.19966399101436308
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.838     0.710     0.769 446.02973195614675
+  INDUSTRIAL      0.780     0.721     0.749 4188.225981356707
+      OFFICE      0.501     0.204     0.290 1774.1557270728865
+       OTHER      0.698     0.474     0.564 1052.2303778720486
+      PUBLIC      0.599     0.365     0.454 2374.94475947527
+ RESIDENTIAL      0.676     0.978     0.800 8962.764424110268
+      RETAIL      0.642     0.187     0.290 1812.9627905723517
+
+    accuracy                          0.687 20611.313792415676
+   macro avg      0.676     0.520     0.559 20611.313792415676
+weighted avg      0.675     0.687     0.648 20611.313792415676
+
+
+Fold 3:
+Load AGRICULTURE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.999     0.999     20576
+           1      0.714     0.786     0.748        70
+
+    accuracy                          0.998     20646
+   macro avg      0.857     0.892     0.874     20646
+weighted avg      0.998     0.998     0.998     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 4.437423867479532
+           1      0.421     0.786     0.548 0.00438335688239857
+
+    accuracy                          0.999 4.441807224361931
+   macro avg      0.710     0.892     0.774 4.441807224361931
+weighted avg      0.999     0.999     0.999 4.441807224361931
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 458075.2658400588
+           1      0.421     0.786     0.548 452.49393097000393
+
+    accuracy                          0.999 458527.7597710288
+   macro avg      0.710     0.892     0.774 458527.7597710288
+weighted avg      0.999     0.999     0.999 458527.7597710288
+
+Load INDUSTRIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.987     0.986     0.986     19768
+           1      0.688     0.706     0.697       878
+
+    accuracy                          0.974     20646
+   macro avg      0.838     0.846     0.842     20646
+weighted avg      0.974     0.974     0.974     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.992 4.582332643345717
+           1      0.307     0.706     0.428 0.04080416090218576
+
+    accuracy                          0.983 4.623136804247903
+   macro avg      0.652     0.846     0.710 4.623136804247903
+weighted avg      0.991     0.983     0.987 4.623136804247903
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.992 473034.1987723569
+           1      0.307     0.706     0.428 4212.213529932631
+
+    accuracy                          0.983 477246.4123022895
+   macro avg      0.652     0.846     0.710 477246.4123022895
+weighted avg      0.991     0.983     0.987 477246.4123022895
+
+Load OFFICE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.986     0.993     0.989     20283
+           1      0.364     0.240     0.289       363
+
+    accuracy                          0.979     20646
+   macro avg      0.675     0.616     0.639     20646
+weighted avg      0.976     0.979     0.977     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.993     0.995 4.7196959412056065
+           1      0.101     0.240     0.142 0.016548212341565307
+
+    accuracy                          0.990 4.7362441535471715
+   macro avg      0.549     0.616     0.568 4.7362441535471715
+weighted avg      0.994     0.990     0.992 4.7362441535471715
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.993     0.995 487214.2120107158
+           1      0.101     0.240     0.142 1708.271960019783
+
+    accuracy                          0.990 488922.4839707356
+   macro avg      0.549     0.616     0.568 488922.4839707356
+weighted avg      0.994     0.990     0.992 488922.4839707356
+
+Load OTHER model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.993     0.996     0.995     20375
+           1      0.637     0.472     0.542       271
+
+    accuracy                          0.990     20646
+   macro avg      0.815     0.734     0.769     20646
+weighted avg      0.988     0.990     0.989     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.996     0.998 4.889180127615359
+           1      0.219     0.472     0.299 0.010384666709032219
+
+    accuracy                          0.995 4.899564794324391
+   macro avg      0.609     0.734     0.648 4.899564794324391
+weighted avg      0.997     0.995     0.996 4.899564794324391
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.996     0.998 504710.0645735814
+           1      0.219     0.472     0.299 1072.0091443734025
+
+    accuracy                          0.995 505782.0737179548
+   macro avg      0.609     0.734     0.648 505782.0737179548
+weighted avg      0.997     0.995     0.996 505782.0737179548
+
+Load PUBLIC model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.980     0.987     0.983     20087
+           1      0.368     0.283     0.320       559
+
+    accuracy                          0.967     20646
+   macro avg      0.674     0.635     0.652     20646
+weighted avg      0.964     0.967     0.965     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 4.829721990819483
+           1      0.084     0.283     0.130 0.021152213130150543
+
+    accuracy                          0.983 4.850874203949633
+   macro avg      0.540     0.635     0.561 4.850874203949633
+weighted avg      0.993     0.983     0.988 4.850874203949633
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 498572.20111224876
+           1      0.084     0.283     0.130 2183.5429614254444
+
+    accuracy                          0.983 500755.7440736742
+   macro avg      0.540     0.635     0.561 500755.7440736742
+weighted avg      0.993     0.983     0.988 500755.7440736742
+
+Load RESIDENTIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.955     0.964     0.960     18101
+           1      0.727     0.678     0.702      2545
+
+    accuracy                          0.929     20646
+   macro avg      0.841     0.821     0.831     20646
+weighted avg      0.927     0.929     0.928     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.273     0.964     0.425 0.0871120062923002
+           1      0.993     0.678     0.806 0.6959735457399605
+
+    accuracy                          0.710 0.7830855520322607
+   macro avg      0.633     0.821     0.616 0.7830855520322607
+weighted avg      0.913     0.710     0.764 0.7830855520322607
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.273     0.964     0.425 8992.572409557128
+           1      0.993     0.678     0.806 71845.34912673675
+
+    accuracy                          0.710 80837.92153629387
+   macro avg      0.633     0.821     0.616 80837.92153629387
+weighted avg      0.913     0.710     0.764 80837.92153629387
+
+Load RETAIL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.984     0.997     0.991     20242
+           1      0.590     0.196     0.294       404
+
+    accuracy                          0.982     20646
+   macro avg      0.787     0.596     0.642     20646
+weighted avg      0.976     0.982     0.977     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 4.770077261165737
+           1      0.206     0.196     0.201 0.017221346794443048
+
+    accuracy                          0.994 4.78729860796018
+   macro avg      0.602     0.596     0.599 4.78729860796018
+weighted avg      0.994     0.994     0.994 4.78729860796018
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 492415.0756698797
+           1      0.206     0.196     0.201 1777.7596295903638
+
+    accuracy                          0.994 494192.83529947005
+   macro avg      0.602     0.596     0.599 494192.83529947005
+weighted avg      0.994     0.994     0.994 494192.83529947005
+
+Fold classification report:
+Normal
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.708     0.729     0.718        70
+  INDUSTRIAL      0.673     0.695     0.683       878
+      OFFICE      0.378     0.187     0.250       363
+       OTHER      0.557     0.487     0.520       271
+      PUBLIC      0.389     0.317     0.349       559
+ RESIDENTIAL      0.949     0.977     0.962     18101
+      RETAIL      0.556     0.210     0.305       404
+
+    accuracy                          0.911     20646
+   macro avg      0.601     0.515     0.541     20646
+weighted avg      0.898     0.911     0.902     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.845     0.729     0.782 0.00438335688239857
+  INDUSTRIAL      0.782     0.695     0.736 0.04080416090218576
+      OFFICE      0.506     0.187     0.273 0.016548212341565307
+       OTHER      0.696     0.487     0.573 0.010384666709032219
+      PUBLIC      0.509     0.317     0.391 0.021152213130150543
+ RESIDENTIAL      0.677     0.977     0.800 0.0871120062923002
+      RETAIL      0.682     0.210     0.322 0.017221346794443048
+
+    accuracy                          0.684 0.19760596305207564
+   macro avg      0.671     0.515     0.554 0.19760596305207564
+weighted avg      0.671     0.684     0.645 0.19760596305207564
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.845     0.729     0.782 452.49393097000393
+  INDUSTRIAL      0.782     0.695     0.736 4212.213529932631
+      OFFICE      0.506     0.187     0.273 1708.2719600197827
+       OTHER      0.696     0.487     0.573 1072.0091443734025
+      PUBLIC      0.509     0.317     0.391 2183.5429614254444
+ RESIDENTIAL      0.677     0.977     0.800 8992.572409557128
+      RETAIL      0.682     0.210     0.322 1777.7596295903638
+
+    accuracy                          0.684 20398.863565868756
+   macro avg      0.671     0.515     0.554 20398.863565868756
+weighted avg      0.671     0.684     0.645 20398.863565868756
+
+
+Fold 4:
+Load AGRICULTURE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.999     0.999     20580
+           1      0.656     0.606     0.630        66
+
+    accuracy                          0.998     20646
+   macro avg      0.827     0.803     0.814     20646
+weighted avg      0.998     0.998     0.998     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 4.438286508200272
+           1      0.356     0.606     0.449 0.004132879346261509
+
+    accuracy                          0.999 4.442419387546534
+   macro avg      0.678     0.803     0.724 4.442419387546534
+weighted avg      0.999     0.999     0.999 4.442419387546534
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 458164.31624166074
+           1      0.356     0.606     0.449 426.6371349145752
+
+    accuracy                          0.999 458590.9533765753
+   macro avg      0.678     0.803     0.724 458590.9533765753
+weighted avg      0.999     0.999     0.999 458590.9533765753
+
+Load INDUSTRIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.985     0.987     0.986     19743
+           1      0.696     0.669     0.682       903
+
+    accuracy                          0.973     20646
+   macro avg      0.840     0.828     0.834     20646
+weighted avg      0.972     0.973     0.972     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 4.5765375039242455
+           1      0.314     0.669     0.428 0.041966010586188825
+
+    accuracy                          0.984 4.618503514510435
+   macro avg      0.656     0.828     0.710 4.618503514510435
+weighted avg      0.991     0.984     0.987 4.618503514510435
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 472435.9665298788
+           1      0.314     0.669     0.428 4332.151272812251
+
+    accuracy                          0.984 476768.11780269106
+   macro avg      0.656     0.828     0.710 476768.11780269106
+weighted avg      0.991     0.984     0.987 476768.11780269106
+
+Load OFFICE model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.986     0.991     0.989     20278
+           1      0.340     0.247     0.286       368
+
+    accuracy                          0.978     20646
+   macro avg      0.663     0.619     0.637     20646
+weighted avg      0.975     0.978     0.976     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.991     0.994 4.718532480193625
+           1      0.092     0.247     0.134 0.016776149150677783
+
+    accuracy                          0.989 4.735308629344303
+   macro avg      0.544     0.619     0.564 4.735308629344303
+weighted avg      0.994     0.989     0.991 4.735308629344303
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.991     0.994 487094.1079304489
+           1      0.092     0.247     0.134 1731.8018768244624
+
+    accuracy                          0.989 488825.90980727336
+   macro avg      0.544     0.619     0.564 488825.90980727336
+weighted avg      0.994     0.989     0.991 488825.90980727336
+
+Load OTHER model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.993     0.996     0.995     20390
+           1      0.622     0.477     0.540       256
+
+    accuracy                          0.990     20646
+   macro avg      0.808     0.736     0.767     20646
+weighted avg      0.989     0.990     0.989     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.996     0.998 4.892779524028322
+           1      0.208     0.477     0.290 0.009809869658716783
+
+    accuracy                          0.995 4.902589393687039
+   macro avg      0.604     0.736     0.644 4.902589393687039
+weighted avg      0.997     0.995     0.996 4.902589393687039
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.996     0.998 505081.63026529195
+           1      0.208     0.477     0.290 1012.6728448693407
+
+    accuracy                          0.995 506094.3031101613
+   macro avg      0.604     0.736     0.644 506094.3031101613
+weighted avg      0.997     0.995     0.996 506094.3031101613
+
+Load PUBLIC model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.980     0.986     0.983     20055
+           1      0.394     0.313     0.349       591
+
+    accuracy                          0.967     20646
+   macro avg      0.687     0.649     0.666     20646
+weighted avg      0.963     0.967     0.965     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.991 4.822027904907888
+           1      0.093     0.313     0.143 0.022363073273558087
+
+    accuracy                          0.983 4.844390978181446
+   macro avg      0.545     0.649     0.567 4.844390978181446
+weighted avg      0.993     0.983     0.987 4.844390978181446
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.991 497777.9406235952
+           1      0.093     0.313     0.143 2308.540054029412
+
+    accuracy                          0.983 500086.48067762464
+   macro avg      0.545     0.649     0.567 500086.48067762464
+weighted avg      0.993     0.983     0.987 500086.48067762464
+
+Load RESIDENTIAL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.954     0.960     0.957     18059
+           1      0.709     0.676     0.692      2587
+
+    accuracy                          0.925     20646
+   macro avg      0.832     0.818     0.825     20646
+weighted avg      0.923     0.925     0.924     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.267     0.960     0.418 0.08690987910240591
+           1      0.993     0.676     0.804 0.7074591602472589
+
+    accuracy                          0.707 0.7943690393496647
+   macro avg      0.630     0.818     0.611 0.7943690393496647
+weighted avg      0.913     0.707     0.762 0.7943690393496647
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.267     0.960     0.418 8971.706819744326
+           1      0.993     0.676     0.804 73031.00911232556
+
+    accuracy                          0.707 82002.71593206988
+   macro avg      0.630     0.818     0.611 82002.71593206988
+weighted avg      0.913     0.707     0.762 82002.71593206988
+
+Load RETAIL model:
+Training...
+Predicting...
+Local clasification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.984     0.997     0.990     20243
+           1      0.533     0.179     0.268       403
+
+    accuracy                          0.981     20646
+   macro avg      0.759     0.588     0.629     20646
+weighted avg      0.975     0.981     0.976     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 4.77031291363393
+           1      0.171     0.179     0.175 0.017178719698417198
+
+    accuracy                          0.994 4.787491633332347
+   macro avg      0.584     0.588     0.586 4.787491633332347
+weighted avg      0.994     0.994     0.994 4.787491633332347
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 492439.40207417123
+           1      0.171     0.179     0.175 1773.3592344676154
+
+    accuracy                          0.994 494212.76130863884
+   macro avg      0.584     0.588     0.586 494212.76130863884
+weighted avg      0.994     0.994     0.994 494212.76130863884
+
+Fold classification report:
+Normal
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.643     0.545     0.590        66
+  INDUSTRIAL      0.685     0.680     0.682       903
+      OFFICE      0.347     0.204     0.257       368
+       OTHER      0.588     0.520     0.552       256
+      PUBLIC      0.407     0.359     0.381       591
+ RESIDENTIAL      0.949     0.976     0.962     18059
+      RETAIL      0.533     0.199     0.289       403
+
+    accuracy                          0.909     20646
+   macro avg      0.593     0.497     0.531     20646
+weighted avg      0.897     0.909     0.901     20646
+
+Weigthed:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.830     0.545     0.658 0.004132879346261509
+  INDUSTRIAL      0.773     0.680     0.723 0.041966010586188825
+      OFFICE      0.476     0.204     0.285 0.016776149150677783
+       OTHER      0.692     0.520     0.593 0.009809869658716783
+      PUBLIC      0.550     0.359     0.434 0.022363073273558087
+ RESIDENTIAL      0.677     0.976     0.799 0.08690987910240591
+      RETAIL      0.680     0.199     0.307 0.017178719698417198
+
+    accuracy                          0.681 0.19913658081622612
+   macro avg      0.668     0.497     0.543 0.19913658081622612
+weighted avg      0.670     0.681     0.644 0.19913658081622612
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.830     0.545     0.658 426.6371349145752
+  INDUSTRIAL      0.773     0.680     0.723 4332.151272812251
+      OFFICE      0.476     0.204     0.285 1731.8018768244624
+       OTHER      0.692     0.520     0.593 1012.6728448693407
+      PUBLIC      0.550     0.359     0.434 2308.540054029412
+ RESIDENTIAL      0.677     0.976     0.799 8971.706819744326
+      RETAIL      0.680     0.199     0.307 1773.3592344676154
+
+    accuracy                          0.681 20556.86923766198
+   macro avg      0.668     0.497     0.543 20556.86923766198
+weighted avg      0.670     0.681     0.644 20556.86923766198
+
+Label binary AGRICULTURE classification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.999     0.999    102892
+           1      0.673     0.695     0.684       338
+
+    accuracy                          0.998    103230
+   macro avg      0.836     0.847     0.842    103230
+weighted avg      0.998     0.998     0.998    103230
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 22.18970725959128
+           1      0.374     0.695     0.487 0.021165351803581825
+
+    accuracy                          0.999 22.210872611394862
+   macro avg      0.687     0.847     0.743 22.210872611394862
+weighted avg      0.999     0.999     0.999 22.210872611394862
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      1.000     0.999     0.999 2290643.48040639
+           1      0.374     0.695     0.487 2184.8992666837444
+
+    accuracy                          0.999 2292828.379673074
+   macro avg      0.687     0.847     0.743 2292828.379673074
+weighted avg      0.999     0.999     0.999 2292828.379673074
+
+Label binary INDUSTRIAL classification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.986     0.986     0.986     98740
+           1      0.696     0.696     0.696      4490
+
+    accuracy                          0.974    103230
+   macro avg      0.841     0.841     0.841    103230
+weighted avg      0.974     0.974     0.974    103230
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.992 22.88848265903997
+           1      0.315     0.696     0.433 0.20866820324695132
+
+    accuracy                          0.984 23.09715086228692
+   macro avg      0.656     0.841     0.713 23.09715086228692
+weighted avg      0.991     0.984     0.987 23.09715086228692
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.986     0.992 2362778.0648897067
+           1      0.315     0.696     0.433 21540.81862118204
+
+    accuracy                          0.984 2384318.8835108886
+   macro avg      0.656     0.841     0.713 2384318.8835108886
+weighted avg      0.991     0.984     0.987 2384318.8835108886
+
+Label binary OFFICE classification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.987     0.992     0.989    101402
+           1      0.368     0.270     0.311      1828
+
+    accuracy                          0.979    103230
+   macro avg      0.677     0.631     0.650    103230
+weighted avg      0.976     0.979     0.977    103230
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.992     0.995 23.59545470739267
+           1      0.102     0.270     0.148 0.08333369741151772
+
+    accuracy                          0.989 23.678788404804187
+   macro avg      0.550     0.631     0.571 23.678788404804187
+weighted avg      0.994     0.989     0.992 23.678788404804187
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.992     0.995 2435758.7894483097
+           1      0.102     0.270     0.148 8602.537583791442
+
+    accuracy                          0.989 2444361.3270321013
+   macro avg      0.550     0.631     0.571 2444361.3270321013
+weighted avg      0.994     0.989     0.992 2444361.3270321013
+
+Label binary OTHER classification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.993     0.996     0.994    101898
+           1      0.602     0.451     0.516      1332
+
+    accuracy                          0.989    103230
+   macro avg      0.798     0.724     0.755    103230
+weighted avg      0.988     0.989     0.988    103230
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.996     0.997 24.451419712609795
+           1      0.195     0.451     0.272 0.05104197806801233
+
+    accuracy                          0.995 24.50246169067781
+   macro avg      0.597     0.724     0.635 24.50246169067781
+weighted avg      0.997     0.995     0.996 24.50246169067781
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.999     0.996     0.997 2524120.056935215
+           1      0.195     0.451     0.272 5269.063395960691
+
+    accuracy                          0.995 2529389.1203311756
+   macro avg      0.597     0.724     0.635 2529389.1203311756
+weighted avg      0.997     0.995     0.996 2529389.1203311756
+
+Label binary PUBLIC classification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.980     0.987     0.983    100254
+           1      0.411     0.312     0.355      2976
+
+    accuracy                          0.967    103230
+   macro avg      0.695     0.650     0.669    103230
+weighted avg      0.963     0.967     0.965    103230
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 24.105090280657826
+           1      0.099     0.313     0.150 0.1126099933369016
+
+    accuracy                          0.984 24.21770027399473
+   macro avg      0.548     0.650     0.571 24.21770027399473
+weighted avg      0.993     0.984     0.988 24.21770027399473
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.987     0.992 2488368.469672821
+           1      0.099     0.313     0.150 11624.729612168085
+
+    accuracy                          0.984 2499993.199284989
+   macro avg      0.548     0.650     0.571 2499993.199284989
+weighted avg      0.993     0.984     0.988 2499993.199284989
+
+Label binary RESIDENTIAL classification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.955     0.962     0.959     90173
+           1      0.725     0.685     0.705     13057
+
+    accuracy                          0.927    103230
+   macro avg      0.840     0.824     0.832    103230
+weighted avg      0.926     0.927     0.926    103230
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.271     0.962     0.423 0.43396226415179473
+           1      0.993     0.685     0.811 3.570658776710765
+
+    accuracy                          0.715 4.00462104086256
+   macro avg      0.632     0.824     0.617 4.00462104086256
+weighted avg      0.915     0.715     0.769 4.00462104086256
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.271     0.962     0.423 44797.92452830903
+           1      0.993     0.685     0.811 368599.10551971087
+
+    accuracy                          0.715 413397.0300480199
+   macro avg      0.632     0.824     0.617 413397.0300480199
+weighted avg      0.915     0.715     0.769 413397.0300480199
+
+Label binary RETAIL classification report:
+Normal:
+              precision    recall  f1-score   support
+
+          -1      0.984     0.997     0.990    101137
+           1      0.581     0.196     0.294      2093
+
+    accuracy                          0.981    103230
+   macro avg      0.782     0.597     0.642    103230
+weighted avg      0.975     0.981     0.976    103230
+
+Weigthed:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 23.8331836755986
+           1      0.201     0.196     0.199 0.08921851198210004
+
+    accuracy                          0.994 23.9224021875807
+   macro avg      0.599     0.597     0.598 23.9224021875807
+weighted avg      0.994     0.994     0.994 23.9224021875807
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+          -1      0.997     0.997     0.997 2460299.5508419247
+           1      0.201     0.196     0.199 9210.026991912491
+
+    accuracy                          0.994 2469509.5778338374
+   macro avg      0.599     0.597     0.598 2469509.5778338374
+weighted avg      0.994     0.994     0.994 2469509.5778338374
+
+Global classification report:
+Normal:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.664     0.660     0.662       338
+  INDUSTRIAL      0.683     0.698     0.691      4490
+      OFFICE      0.375     0.217     0.275      1828
+       OTHER      0.564     0.485     0.521      1332
+      PUBLIC      0.416     0.350     0.380      2976
+ RESIDENTIAL      0.949     0.977     0.963     90173
+      RETAIL      0.559     0.206     0.301      2093
+
+    accuracy                          0.910    103230
+   macro avg      0.601     0.513     0.542    103230
+weighted avg      0.898     0.910     0.902    103230
+
+Weigthed:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.823     0.660     0.732 0.021165351803581825
+  INDUSTRIAL      0.772     0.698     0.733 0.20866820324695132
+      OFFICE      0.512     0.217     0.305 0.08333369741151772
+       OTHER      0.675     0.485     0.565 0.05104197806801233
+      PUBLIC      0.560     0.350     0.431 0.1126099933369016
+ RESIDENTIAL      0.678     0.977     0.800 0.43396226415179473
+      RETAIL      0.682     0.206     0.316 0.08921851198210004
+
+    accuracy                          0.684 1.0000000000008595
+   macro avg      0.672     0.513     0.555 1.0000000000008595
+weighted avg      0.674     0.684     0.647 1.0000000000008595
+
+Weigthed factor:
+              precision    recall  f1-score   support
+
+ AGRICULTURE      0.823     0.660     0.732 2184.8992666837444
+  INDUSTRIAL      0.772     0.698     0.733 21540.81862118204
+      OFFICE      0.512     0.217     0.305 8602.537583791442
+       OTHER      0.675     0.485     0.565 5269.063395960691
+      PUBLIC      0.560     0.350     0.431 11624.729612168085
+ RESIDENTIAL      0.678     0.977     0.800 44797.92452830903
+      RETAIL      0.682     0.206     0.316 9210.026991912491
+
+    accuracy                          0.684 103230.00000000751
+   macro avg      0.672     0.513     0.555 103230.00000000751
+weighted avg      0.674     0.684     0.647 103230.00000000751
+
