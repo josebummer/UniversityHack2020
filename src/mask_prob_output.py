@@ -18,14 +18,20 @@ import json
 #
 OUT_LABEL = 'EVERY_MASK'
 mask_list = []
-for m in ["AGRICULTURE","INDUSTRIAL","OFFICE","OTHER","PUBLIC","RESIDENTIAL","RETAIL"]:
-    with open(f'./GEN_OUTPUT_{m}.json', 'r') as ifile:
-        j = json.load(ifile)
-    mask = j['best_x'][np.argmin(j['best_f'])]
-    mask = np.array(mask, dtype=np.bool)
-    mask_list.append((m,mask))
+# for m in ["AGRICULTURE","INDUSTRIAL","OFFICE","OTHER","PUBLIC","RESIDENTIAL","RETAIL"]:
+#     with open(f'./GEN_OUTPUT_{m}.json', 'r') as ifile:
+#         j = json.load(ifile)
+#     mask = j['best_x'][np.argmin(j['best_f'])]
+#     mask = np.array(mask, dtype=np.bool)
+#     mask_list.append((m,mask))
 
-mask_dict = dict(mask_list)
+dump_file = 'data/aggregated_mask_gt0.pkl'
+with open(dump_file, 'rb') as ofile:
+    gt0 = pickle.load(ofile)
+
+gt0['AGRICULTURE'][1] = True
+mask_dict = gt0
+# mask_dict = dict(mask_list)
 # mask_dict = dict([(m,mask) for m in ["AGRICULTURE","INDUSTRIAL","OFFICE","OTHER","PUBLIC","RESIDENTIAL","RETAIL"]])
 
 def main():
@@ -42,7 +48,7 @@ def main():
 
 
     print('Creating data...')
-    kf = KFold(n_splits=5, shuffle=True, random_state=37)
+    kf = KFold(n_splits=5, shuffle=True)
     folds = list(kf.split(data))
 
     y_pred = np.ones((data.shape[0], len(labels_names)), dtype=np.float)*-1
@@ -66,6 +72,7 @@ def main():
                 labels = np.array([1 if x == label else -1 for x in labels_ini])
             else:
                 labels = np.array([-1 if x == label else 1 for x in labels_ini])
+            # labels = np.array([1 if x == label else -1 for x in labels_ini])
 
             print('Training...')
             model.fit(data.iloc[idx_train].loc[:,mask_dict[label]], labels[idx_train])
@@ -80,6 +87,8 @@ def main():
             # y_pred_label.append(pred_proba[:, 1])
 
         y_pred[idx_test] = np.array(y_pred_label).T
+
+    assert -1 not in y_pred
 
     n_data = pd.DataFrame(y_pred, index=data.index, columns=labels_names)
 
