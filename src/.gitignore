@@ -7,3 +7,5 @@ models_nw_dg/
 ejecucion.sh
 models_merged/
 models_merged2/
+models_nw_newd/
+data/df_final.csv

@@ -295,14 +295,14 @@ def main():
     # print(classification_report(labels_ini, labels_names[y_pred], sample_weight=sample_weight_factor))
 
     print('---------------------------------OVA-Weighted-Genetic MODEL--------------------------------')
-    data = pd.read_csv('data/train.txt', sep='|', index_col='ID')
+    data = pd.read_csv('data/new_train.txt', sep='|', index_col='ID')
     sample_weight = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
     labels_ini = data['CLASE']
     data.drop('CLASE', axis=1, inplace=True)
 
-    data = prepare_data(data)
-    data = fillna(data)
-    data = to_numeric(data)
+    # data = prepare_data(data)
+    # data = fillna(data)
+    # data = to_numeric(data)
 
     class_weights_factor = {'RESIDENTIAL': 4.812552140340716e-06 * data.shape[0],
                             'INDUSTRIAL': 4.647398736012043e-05 * data.shape[0],
@@ -342,7 +342,7 @@ def main():
         for label in labels_names:
             print('Load %s model:' % label)
 
-            dump_file = './2models_w_dg/' + label + '_best_gs_pipeline.pkl'
+            dump_file = './1models_nw_dn/' + label + '_best_gs_pipeline.pkl'
             with open(dump_file, 'rb') as ofile:
                 grid = pickle.load(ofile)
 
@@ -365,34 +365,34 @@ def main():
             # data_mask = data.loc[:, best_cols]
             data_mask = data
 
-            # if label != 'RESIDENTIAL':
-            #     labels = np.array([1 if x == label else -1 for x in labels_ini])
-            # else:
-            #     labels = np.array([-1 if x == label else 1 for x in labels_ini])
-            labels = np.array([1 if x == label else -1 for x in labels_ini])
+            if label != 'RESIDENTIAL':
+                labels = np.array([1 if x == label else -1 for x in labels_ini])
+            else:
+                labels = np.array([-1 if x == label else 1 for x in labels_ini])
+            # labels = np.array([1 if x == label else -1 for x in labels_ini])
 
             class_weight = {}
-            # if label == 'RESIDENTIAL':
-            #     class_weight[-1] = class_weights['RESIDENTIAL']
-            #     class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-            # else:
-            #     class_weight[1] = class_weights[label]
-            #     class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-            class_weight[1] = class_weights[label]
-            class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            if label == 'RESIDENTIAL':
+                class_weight[-1] = class_weights['RESIDENTIAL']
+                class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            else:
+                class_weight[1] = class_weights[label]
+                class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            # class_weight[1] = class_weights[label]
+            # class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
             class_weight_factor = {}
-            # if label == 'RESIDENTIAL':
-            #     class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
-            #     class_weight_factor[1] = np.sum(
-            #         [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-            # else:
-            #     class_weight_factor[1] = class_weights_factor[label]
-            #     class_weight_factor[-1] = np.sum(
-            #         [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-            class_weight_factor[1] = class_weights_factor[label]
-            class_weight_factor[-1] = np.sum(
-                [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
+            if label == 'RESIDENTIAL':
+                class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
+                class_weight_factor[1] = np.sum(
+                    [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
+            else:
+                class_weight_factor[1] = class_weights_factor[label]
+                class_weight_factor[-1] = np.sum(
+                    [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
+            # class_weight_factor[1] = class_weights_factor[label]
+            # class_weight_factor[-1] = np.sum(
+            #     [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
 
             sample_weights_bin = np.array([class_weight[i] for i in labels[idx_test]])
             sample_weights_bin_factor = np.array([class_weight_factor[i] for i in labels[idx_test]])
@@ -412,11 +412,11 @@ def main():
             print('Weigthed factor:')
             print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin_factor, digits=3))
 
-            # if label != 'RESIDENTIAL':
-            #     y_pred_label.append(pred_proba[:, 1])
-            # else:
-            #     y_pred_label.append(pred_proba[:, 0])
-            y_pred_label.append(pred_proba[:, 1])
+            if label != 'RESIDENTIAL':
+                y_pred_label.append(pred_proba[:, 1])
+            else:
+                y_pred_label.append(pred_proba[:, 0])
+            # y_pred_label.append(pred_proba[:, 1])
 
             y_pred_label_bin[label][idx_test] = pred
 
@@ -435,34 +435,34 @@ def main():
     assert -1 not in np.unique(y_pred)
 
     for label in labels_names:
-        # if label != 'RESIDENTIAL':
-        #     labels = np.array([1 if x == label else -1 for x in labels_ini])
-        # else:
-        #     labels = np.array([-1 if x == label else 1 for x in labels_ini])
-        labels = np.array([1 if x == label else -1 for x in labels_ini])
+        if label != 'RESIDENTIAL':
+            labels = np.array([1 if x == label else -1 for x in labels_ini])
+        else:
+            labels = np.array([-1 if x == label else 1 for x in labels_ini])
+        # labels = np.array([1 if x == label else -1 for x in labels_ini])
 
         class_weight = {}
-        # if label == 'RESIDENTIAL':
-        #     class_weight[-1] = class_weights['RESIDENTIAL']
-        #     class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-        # else:
-        #     class_weight[1] = class_weights[label]
-        #     class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-        class_weight[1] = class_weights[label]
-        class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        if label == 'RESIDENTIAL':
+            class_weight[-1] = class_weights['RESIDENTIAL']
+            class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        else:
+            class_weight[1] = class_weights[label]
+            class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        # class_weight[1] = class_weights[label]
+        # class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
         class_weight_factor = {}
-        # if label == 'RESIDENTIAL':
-        #     class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
-        #     class_weight_factor[1] = np.sum(
-        #         [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-        # else:
-        #     class_weight_factor[1] = class_weights_factor[label]
-        #     class_weight_factor[-1] = np.sum(
-        #         [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-        class_weight_factor[1] = class_weights_factor[label]
-        class_weight_factor[-1] = np.sum(
-            [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
+        if label == 'RESIDENTIAL':
+            class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
+            class_weight_factor[1] = np.sum(
+                [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
+        else:
+            class_weight_factor[1] = class_weights_factor[label]
+            class_weight_factor[-1] = np.sum(
+                [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
+        # class_weight_factor[1] = class_weights_factor[label]
+        # class_weight_factor[-1] = np.sum(
+        #     [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
 
         sample_weights_bin = np.array([class_weight[i] for i in labels])
         sample_weights_bin_factor = np.array([class_weight_factor[i] for i in labels])

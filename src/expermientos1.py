@@ -55,43 +55,54 @@ def to_numeric(pdata):
 
 def main():
     # Load and split the data
-    train = pd.read_csv('data/train.txt', sep='|', index_col='ID')
+    train = pd.read_csv('data/new_train.txt', sep='|', index_col='ID')
     labels_ini = train.iloc[:, -1]
     train.drop('CLASE', axis=1, inplace=True)
 
-    train = prepare_data(train)
-    train = fillna(train)
-    train = to_numeric(train)
+    # train = prepare_data(train)
+    # train = fillna(train)
+    # train = to_numeric(train)
 
     weights = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
-    class_weights = {'RESIDENTIAL': 4.812552140340716e-06*train.shape[0],
-                    'INDUSTRIAL': 4.647398736012043e-05*train.shape[0],
-                    'PUBLIC': 3.783937948148589e-05*train.shape[0],
-                    'OFFICE': 4.558736182249404e-05*train.shape[0],
-                    'RETAIL': 4.2627096025849134e-05*train.shape[0],
-                    'AGRICULTURE': 6.261938403426534e-05*train.shape[0],
-                    'OTHER': 3.8319803354362536e-05*train.shape[0]}
+    # class_weights = {'RESIDENTIAL': 4.812552140340716e-06*train.shape[0],
+    #                 'INDUSTRIAL': 4.647398736012043e-05*train.shape[0],
+    #                 'PUBLIC': 3.783937948148589e-05*train.shape[0],
+    #                 'OFFICE': 4.558736182249404e-05*train.shape[0],
+    #                 'RETAIL': 4.2627096025849134e-05*train.shape[0],
+    #                 'AGRICULTURE': 6.261938403426534e-05*train.shape[0],
+    #                 'OTHER': 3.8319803354362536e-05*train.shape[0]}
+    values = np.unique(labels_ini, return_counts=True)
+    class_weights = {'RESIDENTIAL': 1 / values[1][np.where(values[0] == 'RESIDENTIAL')[0][0]],
+                     'INDUSTRIAL': 1 / values[1][np.where(values[0] == 'INDUSTRIAL')[0][0]],
+                     'PUBLIC': 1 / values[1][np.where(values[0] == 'PUBLIC')[0][0]],
+                     'OFFICE': 1 / values[1][np.where(values[0] == 'OFFICE')[0][0]],
+                     'RETAIL': 1 / values[1][np.where(values[0] == 'RETAIL')[0][0]],
+                     'AGRICULTURE': 1 / values[1][np.where(values[0] == 'AGRICULTURE')[0][0]],
+                     'OTHER': 1 / values[1][np.where(values[0] == 'OTHER')[0][0]]}
 
     # train, test, yy_train, yy_test = train_test_split(train, labels_ini, test_size=0.2, random_state=42)
 
     # SI SE CALCULAN LOS MODELOS CON PESOS, RESIDENTIAL VA NORMAL, SI SE CALCULAN SIN PESOS, RESIDENTIAL INVERTIDO.
     for label in progressbar.progressbar(np.unique(labels_ini)):
         print('\n--------------------OVA: %s vs All------------------' % label)
-        # if label != 'RESIDENTIAL':
-        #     labels = np.array([1 if x == label else -1 for x in labels_ini])
-        # else:
-        #     labels = np.array([-1 if x == label else 1 for x in labels_ini])
-        labels = np.array([1 if x == label else -1 for x in labels_ini])
+        if label != 'RESIDENTIAL':
+            labels = np.array([1 if x == label else -1 for x in labels_ini])
+        else:
+            labels = np.array([-1 if x == label else 1 for x in labels_ini])
+        # labels = np.array([1 if x == label else -1 for x in labels_ini])
 
-        class_weight = {}
+        # class_weight = {}
         # if label == 'RESIDENTIAL':
         #     class_weight[-1] = class_weights['RESIDENTIAL']
         #     class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
         # else:
         #     class_weight[1] = class_weights[label]
         #     class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
-        class_weight[1] = class_weights[label]
-        class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        # class_weight[1] = class_weights[label]
+        # class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+        values = np.unique(labels, return_counts=True)
+        class_weight = {-1: 1 / values[1][np.where(values[0] == -1)[0][0]],
+                        1: 1 / values[1][np.where(values[0] == 1)[0][0]]}
 
         # f1w_scorer = get_weight_f1(class_weight)
         f1w = get_weight_f1(class_weight)
@@ -103,25 +114,25 @@ def main():
 
         # Construct some pipelines
         pipe_rf = Pipeline([('scl', StandardScaler()),
-                            ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
+                            ('clf', RandomForestClassifier())])
 
         pipe_rf_noisy = Pipeline([('scl', StandardScaler()),
-                                  ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                                  ('clf', RandomForestClassifier(random_state=42, class_weight=class_weight))])
+                                  ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
+                                  ('clf', RandomForestClassifier())])
 
         pipe_knn = Pipeline([('scl', StandardScaler()),
                              ('clf', KNeighborsClassifier())])
 
         pipe_knn_noisy = Pipeline([('scl', StandardScaler()),
-                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
+                                   ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
                                    ('clf', KNeighborsClassifier())])
 
         pipe_xgb = Pipeline([('scl', StandardScaler()),
-                             ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
+                             ('clf', XGBClassifier())])
 
         pipe_xgb_noisy = Pipeline([('scl', StandardScaler()),
-                                   ('enn', EditedNearestNeighbours(random_state=42, sampling_strategy='majority')),
-                                   ('clf', XGBClassifier(random_state=42, class_weight=class_weight))])
+                                   ('enn', EditedNearestNeighbours(sampling_strategy='majority')),
+                                   ('clf', XGBClassifier())])
 
         # Set grid search params
         grid_params_rf = [{'clf__criterion': ['gini', 'entropy'],
@@ -214,14 +225,14 @@ def main():
             print('Weighted clasification:')
             print(classification_report(y_test, y_pred, sample_weight=sample_weights_tst))
             # Track best (highest test f1) model
-            if f1_score(y_test, y_pred, sample_weight=sample_weights_tst) > best_f1:
-                best_f1 = f1_score(y_test, y_pred, sample_weight=sample_weights_tst)
+            if f1_score(y_test, y_pred, sample_weight=sample_weights_tst, average='macro') > best_f1:
+                best_f1 = f1_score(y_test, y_pred, sample_weight=sample_weights_tst, average='macro')
                 best_gs = grids[idx]
                 best_clf = idx
         print('\nClassifier with best test set f1: %s' % grid_dict[best_clf])
 
         # Save best grid search pipeline to file
-        dump_file = './models_w_dn_factor/' + label + '_best_gs_pipeline.pkl'
+        dump_file = './models_nw_newd/' + label + '_best_gs_pipeline.pkl'
         with open(dump_file, 'wb') as ofile:
             pickle.dump(best_gs, ofile)
         print('\nSaved %s grid search pipeline to file: %s' % (grid_dict[best_clf], dump_file))

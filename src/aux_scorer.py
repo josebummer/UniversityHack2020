@@ -9,4 +9,4 @@ class get_weight_f1:
 
         def __call__(self,y,yp):
             sample_weights = np.array([self.class_weight[i] for i in y])
-            return f1_score(y,yp,sample_weight=sample_weights)
+            return f1_score(y,yp,sample_weight=sample_weights, average='macro')
