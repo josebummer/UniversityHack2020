@@ -30,7 +30,13 @@ def main():
     xy_dens_cols = [x for x in data.columns if "XY_DENS" in x]
     xy_ori_cols = ['X', 'Y']
 
-    mod_cols = basic_cols + geom_ori_cols + geom_dist_cols + geom_prob_cols + rgbn_cols + xy_dens_cols
+    data['VALUE'] = data['AREA'] * data['CADASTRALQUALITYID'] * data['MAXBUILDINGFLOOR']
+    data['VALUE2'] = data['AREA'] * data['CADASTRALQUALITYID']
+    data['VALUE3'] = data['CADASTRALQUALITYID'] * data['MAXBUILDINGFLOOR']
+    data['VALUE4'] = data['AREA'] * data['MAXBUILDINGFLOOR']
+    mod_cols = ['VALUE', 'VALUE2', 'VALUE3', 'VALUE4']
+
+    mod_cols = basic_cols + geom_ori_cols + geom_dist_cols + geom_prob_cols + rgbn_cols + xy_dens_cols + mod_cols
 
     data = data.iloc[:sample_weight.shape[0],][mod_cols]
 
@@ -43,22 +49,22 @@ def main():
 
     labels_names = np.unique(labels_ini)
 
-    # class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
-    #                  'INDUSTRIAL': 4.647398736012043e-05,
-    #                  'PUBLIC': 3.783937948148589e-05,
-    #                  'OFFICE': 4.558736182249404e-05,
-    #                  'RETAIL': 4.2627096025849134e-05,
-    #                  'AGRICULTURE': 6.261938403426534e-05,
-    #                  'OTHER': 3.8319803354362536e-05}
+    # class_weights = {'RESIDENTIAL': 4.812552140340716e-06*labels_ini.size,
+    #                  'INDUSTRIAL': 4.647398736012043e-05*labels_ini.size,
+    #                  'PUBLIC': 3.783937948148589e-05*labels_ini.size,
+    #                  'OFFICE': 4.558736182249404e-05*labels_ini.size,
+    #                  'RETAIL': 4.2627096025849134e-05*labels_ini.size,
+    #                  'AGRICULTURE': 6.261938403426534e-05*labels_ini.size,
+    #                  'OTHER': 3.8319803354362536e-05*labels_ini.size}
 
     values = np.unique(labels_ini, return_counts=True)
-    class_weights = {'RESIDENTIAL': 1/values[1][np.where(values[0]=='RESIDENTIAL')[0][0]],
-                     'INDUSTRIAL': 1/values[1][np.where(values[0]=='INDUSTRIAL')[0][0]],
-                     'PUBLIC': 1/values[1][np.where(values[0]=='PUBLIC')[0][0]],
-                     'OFFICE': 1/values[1][np.where(values[0]=='OFFICE')[0][0]],
-                     'RETAIL': 1/values[1][np.where(values[0]=='RETAIL')[0][0]],
-                     'AGRICULTURE': 1/values[1][np.where(values[0]=='AGRICULTURE')[0][0]],
-                     'OTHER': 1/values[1][np.where(values[0]=='OTHER')[0][0]]}
+    class_weights = {'RESIDENTIAL': 1/values[1][np.where(values[0]=='RESIDENTIAL')[0][0]]*labels_ini.size,
+                     'INDUSTRIAL': 1/values[1][np.where(values[0]=='INDUSTRIAL')[0][0]]*labels_ini.size,
+                     'PUBLIC': 1/values[1][np.where(values[0]=='PUBLIC')[0][0]]*labels_ini.size,
+                     'OFFICE': 1/values[1][np.where(values[0]=='OFFICE')[0][0]]*labels_ini.size,
+                     'RETAIL': 1/values[1][np.where(values[0]=='RETAIL')[0][0]]*labels_ini.size,
+                     'AGRICULTURE': 1/values[1][np.where(values[0]=='AGRICULTURE')[0][0]]*labels_ini.size,
+                     'OTHER': 1/values[1][np.where(values[0]=='OTHER')[0][0]]*labels_ini.size}
 
     y_pred_label_bin = {'RESIDENTIAL': np.ones(labels_ini.shape[0], dtype=np.int) * -2,
                         'INDUSTRIAL': np.ones(labels_ini.shape[0], dtype=np.int) * -2,
@@ -76,9 +82,6 @@ def main():
         for label in labels_names:
             print('Load %s model:' % label)
 
-            model = Pipeline([('scl', StandardScaler()),
-                              ('clf', XGBClassifier(n_jobs=-1))])
-
             if label != 'RESIDENTIAL':
                 labels = np.array([1 if x == label else -1 for x in labels_ini])
             else:
@@ -93,12 +96,16 @@ def main():
             #     class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
             values = np.unique(labels, return_counts=True)
-            class_weight = {-1: 1/values[1][np.where(values[0]==-1)[0][0]],
-                            1: 1/values[1][np.where(values[0]==1)[0][0]]}
-            sample_weights_bin = np.array([class_weight[i] for i in labels[idx_test]])
+            class_weight = {-1: 1/values[1][np.where(values[0]==-1)[0][0]]*labels_ini.size,
+                            1: 1/values[1][np.where(values[0]==1)[0][0]]*labels_ini.size}
+            sample_weights_bin_train = np.array([class_weight[i] for i in labels[idx_train]])
+            sample_weights_bin_test = np.array([class_weight[i] for i in labels[idx_test]])
+
+            model = Pipeline([('scl', StandardScaler()),
+                              ('clf', XGBClassifier(n_jobs=1))])
 
             print('Training...')
-            model.fit(data.iloc[idx_train], labels[idx_train], sample_weight=sample_weights_bin)
+            model.fit(data.iloc[idx_train], labels[idx_train], clf__sample_weight=sample_weights_bin_train)
 
             print('Predicting...')
             pred_proba = model.predict_proba(data.iloc[idx_test])
@@ -108,7 +115,9 @@ def main():
             print('Normal:')
             print(classification_report(labels[idx_test], pred, digits=4))
             print('Weigthed:')
-            print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin, digits=4))
+            print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin_test, digits=4))
+            print('Confusion matrix:')
+            print(confusion_matrix(labels[idx_test], pred))
 
             if label != 'RESIDENTIAL':
                 y_pred_label.append(pred_proba[:, 1])
