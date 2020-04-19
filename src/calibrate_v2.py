@@ -21,11 +21,20 @@ parser.add_argument('--in','-i',dest='in_template',required=True)
 args = parser.parse_args()
 
 # Load data
-# X = pd.read_csv('data/train_mask_RESIDENTIAL_ONLY.txt',sep='|',index_col='ID')
+
 IN_TEMPLATE = "data/{}_RGBA+GEOM.txt"
 IN_TEMPLATE = args.in_template
 IN_PATH = IN_TEMPLATE.format("train")
 IN_PATH_TS = IN_TEMPLATE.format("test")
+
+le = LabelEncoder()
+le.classes_ = np.array(['AGRICULTURE', 'INDUSTRIAL', 'OFFICE', 'OTHER', 'PUBLIC',
+       'RESIDENTIAL', 'RETAIL'])
+
+
+# TODO remove
+# for i in range(5)
+
 
 X = pd.read_csv(IN_PATH,sep='|',index_col='ID')
 y = X.iloc[:,-1]
