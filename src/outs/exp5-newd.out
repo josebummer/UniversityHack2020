@@ -788,3 +788,312 @@ Saved KNN w/ENN grid search pipeline to file: ./models_nw_newd/PUBLIC_best_gs_pi
 Performing model optimizations...
 
 Estimator: Random Forest
+Best params: {'clf__n_estimators': 1200, 'clf__min_samples_split': 5, 'clf__min_samples_leaf': 1, 'clf__max_depth': None, 'clf__criterion': 'gini'}
+Best training f1: 0.769
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.94      0.98      0.96     18026
+           1       0.85      0.58      0.69      2620
+
+    accuracy                           0.93     20646
+   macro avg       0.90      0.78      0.83     20646
+weighted avg       0.93      0.93      0.93     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.70      0.98      0.82 0.1999046277711264
+           1       0.97      0.58      0.73 0.20065865053228157
+
+    accuracy                           0.78 0.400563278303408
+   macro avg       0.84      0.78      0.77 0.400563278303408
+weighted avg       0.84      0.78      0.77 0.400563278303408
+
+
+Estimator: Random Forest w/ENN
+Best params: {'clf__n_estimators': 400, 'clf__min_samples_split': 5, 'clf__min_samples_leaf': 1, 'clf__max_depth': None, 'clf__criterion': 'gini'}
+Best training f1: 0.806
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.95      0.97      0.96     18026
+           1       0.74      0.67      0.70      2620
+
+    accuracy                           0.93     20646
+   macro avg       0.84      0.82      0.83     20646
+weighted avg       0.93      0.93      0.93     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.74      0.97      0.84 0.1999046277711264
+           1       0.95      0.67      0.79 0.20065865053228157
+
+    accuracy                           0.82 0.400563278303408
+   macro avg       0.85      0.82      0.81 0.400563278303408
+weighted avg       0.85      0.82      0.81 0.400563278303408
+
+
+Estimator: KNN
+Best params: {'clf__weights': 'distance', 'clf__n_neighbors': 1, 'clf__metric': 'manhattan'}
+Best training f1: 0.764
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.94      0.96      0.95     18026
+           1       0.68      0.60      0.63      2620
+
+    accuracy                           0.91     20646
+   macro avg       0.81      0.78      0.79     20646
+weighted avg       0.91      0.91      0.91     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.70      0.96      0.81 0.1999046277711264
+           1       0.93      0.60      0.73 0.20065865053228157
+
+    accuracy                           0.78 0.400563278303408
+   macro avg       0.82      0.78      0.77 0.400563278303408
+weighted avg       0.82      0.78      0.77 0.400563278303408
+
+
+Estimator: KNN w/ENN
+Best params: {'clf__weights': 'uniform', 'clf__n_neighbors': 1, 'clf__metric': 'manhattan'}
+Best training f1: 0.789
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.95      0.93      0.94     18026
+           1       0.58      0.66      0.62      2620
+
+    accuracy                           0.90     20646
+   macro avg       0.76      0.79      0.78     20646
+weighted avg       0.90      0.90      0.90     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.73      0.93      0.82 0.1999046277711264
+           1       0.90      0.66      0.76 0.20065865053228157
+
+    accuracy                           0.79 0.400563278303408
+   macro avg       0.82      0.79      0.79 0.400563278303408
+weighted avg       0.82      0.79      0.79 0.400563278303408
+
+
+Estimator: XGB
+Best params: {'clf__n_estimators': 1200, 'clf__max_depth': 18, 'clf__learning_rate': 0.5}
+Best training f1: 0.785
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.95      0.98      0.96     18026
+           1       0.81      0.61      0.70      2620
+
+    accuracy                           0.93     20646
+   macro avg       0.88      0.80      0.83     20646
+weighted avg       0.93      0.93      0.93     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.72      0.98      0.83 0.1999046277711264
+           1       0.97      0.61      0.75 0.20065865053228157
+
+    accuracy                           0.80 0.400563278303408
+   macro avg       0.84      0.80      0.79 0.400563278303408
+weighted avg       0.84      0.80      0.79 0.400563278303408
+
+
+Estimator: XGB w/ENN
+Best params: {'clf__n_estimators': 1200, 'clf__max_depth': 18, 'clf__learning_rate': 0.5}
+Best training f1: 0.822
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.96      0.96      0.96     18026
+           1       0.70      0.70      0.70      2620
+
+    accuracy                           0.92     20646
+   macro avg       0.83      0.83      0.83     20646
+weighted avg       0.92      0.92      0.92     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.76      0.96      0.85 0.1999046277711264
+           1       0.94      0.70      0.80 0.20065865053228157
+
+    accuracy                           0.83 0.400563278303408
+   macro avg       0.85      0.83      0.83 0.400563278303408
+weighted avg       0.85      0.83      0.83 0.400563278303408
+
+
+Classifier with best test set f1: XGB w/ENN
+
+Saved XGB w/ENN grid search pipeline to file: ./models_nw_newd/RESIDENTIAL_best_gs_pipeline.pkl
+
+--------------------OVA: RETAIL vs All------------------
+Performing model optimizations...
+
+Estimator: Random Forest
+Best params: {'clf__n_estimators': 400, 'clf__min_samples_split': 2, 'clf__min_samples_leaf': 1, 'clf__max_depth': None, 'clf__criterion': 'entropy'}
+Best training f1: 0.466
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      1.00      0.99     20231
+           1       0.86      0.12      0.20       415
+
+    accuracy                           0.98     20646
+   macro avg       0.92      0.56      0.60     20646
+weighted avg       0.98      0.98      0.97     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.53      1.00      0.70 0.2000355952816994
+           1       1.00      0.12      0.21 0.1982799808886779
+
+    accuracy                           0.56 0.3983155761703773
+   macro avg       0.76      0.56      0.45 0.3983155761703773
+weighted avg       0.76      0.56      0.45 0.3983155761703773
+
+
+Estimator: Random Forest w/ENN
+Best params: {'clf__n_estimators': 900, 'clf__min_samples_split': 2, 'clf__min_samples_leaf': 1, 'clf__max_depth': None, 'clf__criterion': 'gini'}
+Best training f1: 0.479
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      1.00      0.99     20231
+           1       0.74      0.14      0.23       415
+
+    accuracy                           0.98     20646
+   macro avg       0.86      0.57      0.61     20646
+weighted avg       0.98      0.98      0.98     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.54      1.00      0.70 0.2000355952816994
+           1       0.99      0.14      0.24 0.1982799808886779
+
+    accuracy                           0.57 0.3983155761703773
+   macro avg       0.77      0.57      0.47 0.3983155761703773
+weighted avg       0.76      0.57      0.47 0.3983155761703773
+
+
+Estimator: KNN
+Best params: {'clf__weights': 'uniform', 'clf__n_neighbors': 1, 'clf__metric': 'manhattan'}
+Best training f1: 0.554
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      0.99      0.99     20231
+           1       0.26      0.23      0.24       415
+
+    accuracy                           0.97     20646
+   macro avg       0.62      0.61      0.61     20646
+weighted avg       0.97      0.97      0.97     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.56      0.99      0.72 0.2000355952816994
+           1       0.94      0.23      0.37 0.19827998088867793
+
+    accuracy                           0.61 0.39831557617037733
+   macro avg       0.75      0.61      0.54 0.39831557617037733
+weighted avg       0.75      0.61      0.54 0.39831557617037733
+
+
+Estimator: KNN w/ENN
+Best params: {'clf__weights': 'uniform', 'clf__n_neighbors': 1, 'clf__metric': 'manhattan'}
+Best training f1: 0.581
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      0.98      0.98     20231
+           1       0.20      0.26      0.23       415
+
+    accuracy                           0.96     20646
+   macro avg       0.59      0.62      0.61     20646
+weighted avg       0.97      0.96      0.97     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.57      0.98      0.72 0.2000355952816994
+           1       0.93      0.26      0.41 0.1982799808886779
+
+    accuracy                           0.62 0.3983155761703773
+   macro avg       0.75      0.62      0.57 0.3983155761703773
+weighted avg       0.75      0.62      0.57 0.3983155761703773
+
+
+Estimator: XGB
+Best params: {'clf__n_estimators': 900, 'clf__max_depth': 12, 'clf__learning_rate': 0.3}
+Best training f1: 0.494
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      1.00      0.99     20231
+           1       0.68      0.15      0.25       415
+
+    accuracy                           0.98     20646
+   macro avg       0.83      0.57      0.62     20646
+weighted avg       0.98      0.98      0.98     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.54      1.00      0.70 0.2000355952816994
+           1       0.99      0.15      0.26 0.1982799808886779
+
+    accuracy                           0.58 0.3983155761703773
+   macro avg       0.77      0.57      0.48 0.3983155761703773
+weighted avg       0.77      0.58      0.48 0.3983155761703773
+
+
+Estimator: XGB w/ENN
+Best params: {'clf__n_estimators': 900, 'clf__max_depth': 6, 'clf__learning_rate': 0.4}
+Best training f1: 0.521
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      1.00      0.99     20231
+           1       0.51      0.21      0.30       415
+
+    accuracy                           0.98     20646
+   macro avg       0.75      0.60      0.64     20646
+weighted avg       0.97      0.98      0.98     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.56      1.00      0.72 0.2000355952816994
+           1       0.98      0.21      0.34 0.19827998088867793
+
+    accuracy                           0.60 0.39831557617037733
+   macro avg       0.77      0.60      0.53 0.39831557617037733
+weighted avg       0.77      0.60      0.53 0.39831557617037733
+
+
+Classifier with best test set f1: KNN w/ENN
+
+Saved KNN w/ENN grid search pipeline to file: ./models_nw_newd/RETAIL_best_gs_pipeline.pkl

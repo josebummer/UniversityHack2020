@@ -304,23 +304,13 @@ def main():
     # data = fillna(data)
     # data = to_numeric(data)
 
-    class_weights_factor = {'RESIDENTIAL': 4.812552140340716e-06 * data.shape[0],
-                            'INDUSTRIAL': 4.647398736012043e-05 * data.shape[0],
-                            'PUBLIC': 3.783937948148589e-05 * data.shape[0],
-                            'OFFICE': 4.558736182249404e-05 * data.shape[0],
-                            'RETAIL': 4.2627096025849134e-05 * data.shape[0],
-                            'AGRICULTURE': 6.261938403426534e-05 * data.shape[0],
-                            'OTHER': 3.8319803354362536e-05 * data.shape[0]}
-
-    class_weights = {'RESIDENTIAL': 4.812552140340716e-06,
-                     'INDUSTRIAL': 4.647398736012043e-05,
-                     'PUBLIC': 3.783937948148589e-05,
-                     'OFFICE': 4.558736182249404e-05,
-                     'RETAIL': 4.2627096025849134e-05,
-                     'AGRICULTURE': 6.261938403426534e-05,
-                     'OTHER': 3.8319803354362536e-05}
-
-    sample_weight_factor = np.array([class_weights_factor[i] for i in labels_ini])
+    class_weights = {'RESIDENTIAL': 4.812552140340716e-06 * (labels_ini == 'RESIDENTIAL').sum(),
+                     'INDUSTRIAL': 4.647398736012043e-05 * (labels_ini == 'INDUSTRIAL').sum(),
+                     'PUBLIC': 3.783937948148589e-05 * (labels_ini == 'PUBLIC').sum(),
+                     'OFFICE': 4.558736182249404e-05 * (labels_ini == 'OFFICE').sum(),
+                     'RETAIL': 4.2627096025849134e-05 * (labels_ini == 'RETAIL').sum(),
+                     'AGRICULTURE': 6.261938403426534e-05 * (labels_ini == 'AGRICULTURE').sum(),
+                     'OTHER': 3.8319803354362536e-05 * (labels_ini == 'OTHER').sum()}
 
     y_pred_label_bin = {'RESIDENTIAL': np.ones(labels_ini.shape[0], dtype=np.int) * -2,
                         'INDUSTRIAL': np.ones(labels_ini.shape[0], dtype=np.int) * -2,
@@ -342,7 +332,7 @@ def main():
         for label in labels_names:
             print('Load %s model:' % label)
 
-            dump_file = './1models_nw_dn/' + label + '_best_gs_pipeline.pkl'
+            dump_file = './models_nw_newd/' + label + '_best_gs_pipeline.pkl'
             with open(dump_file, 'rb') as ofile:
                 grid = pickle.load(ofile)
 
@@ -373,32 +363,22 @@ def main():
 
             class_weight = {}
             if label == 'RESIDENTIAL':
-                class_weight[-1] = class_weights['RESIDENTIAL']
-                class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+                class_weight[-1] = class_weights['RESIDENTIAL'] / (labels == -1).sum() * labels_ini.size
+                class_weight[1] = (1 - class_weights['RESIDENTIAL']) / (labels == 1).sum() * labels_ini.size
             else:
-                class_weight[1] = class_weights[label]
-                class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+                class_weight[1] = class_weights[label] / (labels == 1).sum() * labels_ini.size
+                class_weight[-1] = (1 - class_weights[label]) / (labels == -1).sum() * labels_ini.size
             # class_weight[1] = class_weights[label]
             # class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
-            class_weight_factor = {}
-            if label == 'RESIDENTIAL':
-                class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
-                class_weight_factor[1] = np.sum(
-                    [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-            else:
-                class_weight_factor[1] = class_weights_factor[label]
-                class_weight_factor[-1] = np.sum(
-                    [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-            # class_weight_factor[1] = class_weights_factor[label]
-            # class_weight_factor[-1] = np.sum(
-            #     [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-
-            sample_weights_bin = np.array([class_weight[i] for i in labels[idx_test]])
-            sample_weights_bin_factor = np.array([class_weight_factor[i] for i in labels[idx_test]])
+            sample_weights_bin_train = np.array([class_weight[i] for i in labels[idx_train]])
+            sample_weights_bin_test = np.array([class_weight[i] for i in labels[idx_test]])
 
             print('Training...')
-            model.fit(data_mask.iloc[idx_train], labels[idx_train])
+            if 'enn' ==  model.steps[1][0] or model.steps[2][1].__class__.__name__=='KNeighborsClassifier' or model.steps[1][1].__class__.__name__=='KNeighborsClassifier':
+                model.fit(data_mask.iloc[idx_train], labels[idx_train])
+            else:
+                model.fit(data_mask.iloc[idx_train], labels[idx_train], clf__sample_weight=sample_weights_bin_train)
 
             print('Predicting...')
             pred_proba = model.predict_proba(data_mask.iloc[idx_test])
@@ -406,11 +386,9 @@ def main():
 
             print('Local clasification report:')
             print('Normal:')
-            print(classification_report(labels[idx_test], pred, digits=3))
+            print(classification_report(labels[idx_test], pred, digits=4))
             print('Weigthed:')
-            print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin, digits=3))
-            print('Weigthed factor:')
-            print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin_factor, digits=3))
+            print(classification_report(labels[idx_test], pred, sample_weight=sample_weights_bin_test, digits=4))
 
             if label != 'RESIDENTIAL':
                 y_pred_label.append(pred_proba[:, 1])
@@ -424,13 +402,10 @@ def main():
 
         print('Fold classification report:')
         print('Normal')
-        print(classification_report(labels_ini.iloc[idx_test], labels_names[y_pred[idx_test]], digits=3))
+        print(classification_report(labels_ini.iloc[idx_test], labels_names[y_pred[idx_test]], digits=4))
         print('Weigthed:')
         print(classification_report(labels_ini.iloc[idx_test], labels_names[y_pred[idx_test]],
-                                    sample_weight=sample_weight.iloc[idx_test], digits=3))
-        print('Weigthed factor:')
-        print(classification_report(labels_ini.iloc[idx_test], labels_names[y_pred[idx_test]],
-                                    sample_weight=sample_weight_factor[idx_test], digits=3))
+                                    sample_weight=sample_weight.iloc[idx_test], digits=4))
 
     assert -1 not in np.unique(y_pred)
 
@@ -443,47 +418,29 @@ def main():
 
         class_weight = {}
         if label == 'RESIDENTIAL':
-            class_weight[-1] = class_weights['RESIDENTIAL']
-            class_weight[1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            class_weight[-1] = class_weights['RESIDENTIAL'] / (labels == -1).sum() * labels_ini.size
+            class_weight[1] = (1 - class_weights['RESIDENTIAL']) / (labels == 1).sum() * labels_ini.size
         else:
-            class_weight[1] = class_weights[label]
-            class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
+            class_weight[1] = class_weights[label] / (labels == 1).sum() * labels_ini.size
+            class_weight[-1] = (1 - class_weights[label]) / (labels == -1).sum() * labels_ini.size
         # class_weight[1] = class_weights[label]
         # class_weight[-1] = np.sum([class_weights[value] for value in class_weights.keys() if value != label])
 
-        class_weight_factor = {}
-        if label == 'RESIDENTIAL':
-            class_weight_factor[-1] = class_weights_factor['RESIDENTIAL']
-            class_weight_factor[1] = np.sum(
-                [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-        else:
-            class_weight_factor[1] = class_weights_factor[label]
-            class_weight_factor[-1] = np.sum(
-                [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-        # class_weight_factor[1] = class_weights_factor[label]
-        # class_weight_factor[-1] = np.sum(
-        #     [class_weights_factor[value] for value in class_weights_factor.keys() if value != label])
-
         sample_weights_bin = np.array([class_weight[i] for i in labels])
-        sample_weights_bin_factor = np.array([class_weight_factor[i] for i in labels])
 
         assert -2 not in np.unique(y_pred_label_bin[label])
 
         print('Label binary ' + label + ' classification report:')
         print('Normal:')
-        print(classification_report(labels, y_pred_label_bin[label], digits=3))
+        print(classification_report(labels, y_pred_label_bin[label], digits=4))
         print('Weigthed:')
-        print(classification_report(labels, y_pred_label_bin[label], sample_weight=sample_weights_bin, digits=3))
-        print('Weigthed factor:')
-        print(classification_report(labels, y_pred_label_bin[label], sample_weight=sample_weights_bin_factor, digits=3))
+        print(classification_report(labels, y_pred_label_bin[label], sample_weight=sample_weights_bin, digits=4))
 
     print('Global classification report:')
     print('Normal:')
-    print(classification_report(labels_ini, labels_names[y_pred], digits=3))
+    print(classification_report(labels_ini, labels_names[y_pred], digits=4))
     print('Weigthed:')
-    print(classification_report(labels_ini, labels_names[y_pred], sample_weight=sample_weight, digits=3))
-    print('Weigthed factor:')
-    print(classification_report(labels_ini, labels_names[y_pred], sample_weight=sample_weight_factor, digits=3))
+    print(classification_report(labels_ini, labels_names[y_pred], sample_weight=sample_weight, digits=4))
 
 
 if __name__ == '__main__':
