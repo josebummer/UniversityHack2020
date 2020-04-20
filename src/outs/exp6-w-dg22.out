@@ -210,3 +210,28 @@ weighted avg       0.97      0.97      0.96 20629.830290766837
 
 
 Estimator: KNN
+Best params: {'clf__weights': 'distance', 'clf__n_neighbors': 1, 'clf__metric': 'manhattan'}
+Best training f1: 0.957
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.99      0.99      0.99     20385
+           1       0.49      0.43      0.46       261
+
+    accuracy                           0.99     20646
+   macro avg       0.74      0.71      0.73     20646
+weighted avg       0.99      0.99      0.99     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.97      0.99      0.98 19597.37867939614
+           1       0.80      0.43      0.56 1032.4516113706948
+
+    accuracy                           0.97 20629.830290766837
+   macro avg       0.88      0.71      0.77 20629.830290766837
+weighted avg       0.96      0.97      0.96 20629.830290766837
+
+
+Estimator: KNN w/ dist

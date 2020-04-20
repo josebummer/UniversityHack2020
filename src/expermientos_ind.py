@@ -153,7 +153,7 @@ def main():
     # train, test, yy_train, yy_test = train_test_split(train, labels_ini, test_size=0.2, random_state=42)
 
     # SI SE CALCULAN LOS MODELOS CON PESOS, RESIDENTIAL VA NORMAL, SI SE CALCULAN SIN PESOS, RESIDENTIAL INVERTIDO.
-    for label in progressbar.progressbar(LABEL):
+    for label in progressbar.progressbar([LABEL]):
         print('\n--------------------OVA: %s vs All------------------' % label)
         if label != 'RESIDENTIAL':
             labels = np.array([1 if x == label else -1 for x in labels_ini])
