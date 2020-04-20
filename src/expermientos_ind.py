@@ -186,14 +186,6 @@ def main():
                                     # ('scl', StandardScaler()),
                                   ('clf', RandomForestClassifier())])
 
-        pipe_knn = Pipeline([('rxy', DeleteXY()),
-                             # ('scl', StandardScaler()),
-                             ('clf', KNeighborsClassifier())])
-
-        pipe_knn_dist = Pipeline([('add', AddColumns()),
-                                   # ('scl', StandardScaler()),
-                                   ('clf', KNeighborsClassifier())])
-
         pipe_xgb = Pipeline([('rxy', DeleteXY()),
                              # ('scl', StandardScaler()),
                              ('clf', XGBClassifier(tree_method='hist'))])
