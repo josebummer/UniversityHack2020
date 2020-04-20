@@ -122,7 +122,7 @@ def main():
 
     out['idx_test'] = test
     out = pd.DataFrame(out, index=data.index)
-    out = pd.concat([pd.DataFrame(out, index=data.index), labels_ini], axis=1, sort=False)
+    out = pd.concat([out, labels_ini], axis=1, sort=False)
     out.to_csv('data/probs_ova_dg_samplew.txt', sep='|')
 
 

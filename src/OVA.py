@@ -15,7 +15,7 @@ from xgboost import XGBClassifier
 
 
 def main():
-    data = pd.read_csv('data/train.txt', sep='|', index_col='ID')
+    data = pd.read_csv('data/train.txt', sep='|', index_col='ID').iloc[:1000,]
     labels_ini = data.iloc[:, -1]
     data.drop('CLASE', axis=1, inplace=True)
 
@@ -295,8 +295,8 @@ def main():
     # print(classification_report(labels_ini, labels_names[y_pred], sample_weight=sample_weight_factor))
 
     print('---------------------------------OVA-Weighted-Genetic MODEL--------------------------------')
-    data = pd.read_csv('data/new_train.txt', sep='|', index_col='ID')
-    sample_weight = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
+    data = pd.read_csv('data/new_train.txt', sep='|', index_col='ID').iloc[:1000,]
+    sample_weight = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID').iloc[:1000,]
     labels_ini = data['CLASE']
     data.drop('CLASE', axis=1, inplace=True)
 

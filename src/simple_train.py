@@ -11,13 +11,48 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from expermientos1 import prepare_data, fillna, to_numeric
 from imblearn.pipeline import Pipeline
+from xgboost import XGBClassifier
 
 
 def main():
-    data = pd.read_csv('data/new_train.txt', sep='|', index_col='ID')
+    data = pd.read_csv('data/df_final.csv', sep='|', index_col='ID')
     sample_weights = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
-    labels = data['CLASE']
+    labels = data['CLASE'].iloc[:sample_weights.shape[0], ]
     data.drop('CLASE', axis=1, inplace=True)
+
+    basic_cols = ['CONTRUCTIONYEAR', 'MAXBUILDINGFLOOR', 'CADASTRALQUALITYID', 'AREA']
+    rgbn_cols = [x for x in data.columns if "RGBN_PROB_" in x]
+    geom_ori_cols = [x for x in data.columns if "GEOM_R" in x]
+    geom_dist_cols = [x for x in data.columns if "GEOM_DIST4" in x]
+    geom_prob_cols = [x for x in data.columns if "GEOM_PROB" in x]
+    xy_dens_cols = [x for x in data.columns if "XY_DENS" in x]
+    xy_ori_cols = ['X', 'Y']
+
+    data['VALUE'] = data['AREA'] * data['CADASTRALQUALITYID'] * data['MAXBUILDINGFLOOR']
+    data['VALUE2'] = data['AREA'] * data['CADASTRALQUALITYID']
+    data['VALUE3'] = data['CADASTRALQUALITYID'] * data['MAXBUILDINGFLOOR']
+    data['VALUE4'] = data['AREA'] * data['MAXBUILDINGFLOOR']
+    mod_cols = ['VALUE', 'VALUE2', 'VALUE3', 'VALUE4']
+
+    points = [(2.207524e9, 165.5605e6), (2.207524e9, 165.5605e6), (2.170449e9, 166.0036e6),
+              (2.205824e9, 166.3199e6), (2.250042e9, 166.2673e6), (2.270527e9, 165.9025e6),
+              (2.274459e9, 165.5947e6), (2.269886e9, 165.3261e6), (2.211719e9, 165.1699e6),
+              (2.156419e9, 165.2959e6), (2.142472e9, 165.4747e6), (2.141374e9, 165.8068e6),
+              (2.166906e9, 165.7316e6), (2.187454e9, 165.4168e6), (2.174702e9, 165.481e6),
+              (2.202014e9, 165.5483e6), (2.215004e9, 165.4046e6), (2.196768e9, 165.4717e6),
+              (2.236186e9, 165.4013e6), (2.220204e9, 165.4714e6), (2.219742e9, 165.8038e6)]
+
+    distances = [np.linalg.norm(data[['X', 'Y']].values - b, axis=1) for b in points]
+
+    distances_cols = []
+    for i, _ in enumerate(points):
+        col = 'C_' + str(i)
+        distances_cols.append(col)
+        data[col] = distances[i]
+
+    mod_cols = basic_cols + geom_ori_cols + geom_dist_cols + geom_prob_cols + rgbn_cols + xy_dens_cols + mod_cols + distances_cols
+
+    data = data.iloc[:sample_weights.shape[0], ][mod_cols]
 
     # data = prepare_data(data)
     # data = fillna(data)
@@ -31,10 +66,11 @@ def main():
         print('\nFold %d:' % i)
 
         model = Pipeline([('scl', StandardScaler()),
-                          ('clf', RandomForestClassifier(random_state=55, n_jobs=-1))])
+                          ('clf', XGBClassifier(n_jobs=-1))])
 
         print('Training...')
-        model.fit(data.iloc[idx_train], labels[idx_train])
+        sample_weight = np.array(sample_weights.values)[idx_train]*labels.size
+        model.fit(data.iloc[idx_train], labels[idx_train], clf__sample_weight=sample_weight)
 
         print('Predicting...')
         # pred_proba = model.predict_proba(data.iloc[idx_test])
