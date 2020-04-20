@@ -264,12 +264,12 @@ def main():
                                           n_iter=20)
 
         # List of pipelines for ease of iteration
-        grids = [gs_rf, gs_rf_dist, gs_knn, gs_knn_dist, gs_xgb, gs_xgb_dist]
+        grids = [gs_xgb, gs_xgb_dist, gs_rf, gs_rf_dist, gs_knn, gs_knn_dist]
 
         # Dictionary of pipelines and classifier types for ease of reference
-        grid_dict = {0: 'Random Forest', 1: 'Random Forest w/ dist',
-                     2: 'KNN', 3: 'KNN w/ dist',
-                     4: 'XGB', 5: 'XGB w/ dist'}
+        grid_dict = {2: 'Random Forest',3: 'Random Forest w/ dist',
+                     4: 'KNN', 5: 'KNN w/ dist',
+                     0: 'XGB', 1: 'XGB w/ dist'}
 
         # Fit the grid search objects
         print('Performing model optimizations...')
