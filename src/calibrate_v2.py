@@ -56,7 +56,7 @@ y_weights = clase_weights[y].ravel()
 
 X_uncalib = np.zeros((X.shape[0],7))
 for tr_idx, ts_idx in cv:
-    cv_cols = [f'CV_{i}_{l}' for l in le.classes_ for i in [0]]
+    cv_cols = [f'CV_{i}_{l}' for l in le.classes_ for i in range(5)]
     X_uncalib[ts_idx] = X[cv_cols].iloc[ts_idx]
 
 cr = classification_report(y,X_uncalib.argmax(1),target_names=le.classes_,digits=3,sample_weight=y_weights)

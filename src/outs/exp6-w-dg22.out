@@ -185,3 +185,28 @@ weighted avg       0.96      0.97      0.96 20629.830290766837
 
 
 Estimator: Random Forest w/ dist
+Best params: {'clf__n_estimators': 400, 'clf__min_samples_split': 5, 'clf__min_samples_leaf': 5, 'clf__max_depth': None, 'clf__criterion': 'entropy'}
+Best training f1: 0.956
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.99      1.00      1.00     20385
+           1       0.78      0.39      0.52       261
+
+    accuracy                           0.99     20646
+   macro avg       0.89      0.69      0.76     20646
+weighted avg       0.99      0.99      0.99     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.97      1.00      0.98 19597.37867939614
+           1       0.94      0.39      0.55 1032.4516113706948
+
+    accuracy                           0.97 20629.830290766837
+   macro avg       0.95      0.69      0.77 20629.830290766837
+weighted avg       0.97      0.97      0.96 20629.830290766837
+
+
+Estimator: KNN
