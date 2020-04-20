@@ -21,7 +21,7 @@ from aux_scorer import get_weight_f1
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('-l',dest='label',required=True)
-parser.add_argument('-j',dest='jobs',required=True)
+parser.add_argument('-j',dest='jobs',type=int,required=True)
 args = parser.parse_args()
 
 # Load data
@@ -177,30 +177,30 @@ def main():
         sample_weights_tr = np.array([class_weight[i] for i in y_train])
         sample_weights_tst = np.array([class_weight[i] for i in y_test])
 
-        # Construct some pipelines
-        pipe_rf = Pipeline([('rxy', DeleteXY()),
-                             ('scl', StandardScaler()),
-                            ('clf', RandomForestClassifier())])
-
-        pipe_rf_dist = Pipeline([('add', AddColumns()),
-                                    ('scl', StandardScaler()),
-                                  ('clf', RandomForestClassifier())])
-
-        pipe_knn = Pipeline([('rxy', DeleteXY()),
-                             ('scl', StandardScaler()),
-                             ('clf', KNeighborsClassifier())])
-
-        pipe_knn_dist = Pipeline([('add', AddColumns()),
-                                   ('scl', StandardScaler()),
-                                   ('clf', KNeighborsClassifier())])
+        # # Construct some pipelines
+        # pipe_rf = Pipeline([('rxy', DeleteXY()),
+        #                      # ('scl', StandardScaler()),
+        #                     ('clf', RandomForestClassifier())])
+        #
+        # pipe_rf_dist = Pipeline([('add', AddColumns()),
+        #                             # ('scl', StandardScaler()),
+        #                           ('clf', RandomForestClassifier())])
+        #
+        # pipe_knn = Pipeline([('rxy', DeleteXY()),
+        #                      ('scl', StandardScaler()),
+        #                      ('clf', KNeighborsClassifier())])
+        #
+        # pipe_knn_dist = Pipeline([('add', AddColumns()),
+        #                            ('scl', StandardScaler()),
+        #                            ('clf', KNeighborsClassifier())])
 
         pipe_xgb = Pipeline([('rxy', DeleteXY()),
-                             ('scl', StandardScaler()),
-                             ('clf', XGBClassifier())])
+                             # ('scl', StandardScaler()),
+                             ('clf', XGBClassifier(tree_method='hist'))])
 
         pipe_xgb_dist = Pipeline([('add', AddColumns()),
-                                   ('scl', StandardScaler()),
-                                   ('clf', XGBClassifier())])
+                                   # ('scl', StandardScaler()),
+                                   ('clf', XGBClassifier(tree_method='hist'))])
 
         # Set grid search params
         grid_params_rf = [{'clf__criterion': ['gini', 'entropy'],
@@ -213,63 +213,63 @@ def main():
                             'clf__weights': ['uniform', 'distance'],
                             'clf__metric': ['minkowski', 'manhattan']}]
 
-        grid_params_xgboost = [{'clf__max_depth': [2, 6, 8, 12, 18],
-                                'clf__learning_rate': [0.1, 0.15, 0.3, 0.4, 0.5],
-                                'clf__n_estimators': [400, 600, 900, 1200]}]
+        grid_params_xgboost = [{'clf__max_depth': [2, 6, 8, 12],
+                                'clf__learning_rate': [0.1, 0.15],
+                                'clf__n_estimators': [100, 400, 600, 900]}]
 
         # Construct grid searches
         jobs = N_JOBS
 
 
-        gs_rf = RandomizedSearchCV(estimator=pipe_rf,
-                                   param_distributions=grid_params_rf,
-                                   scoring=f1w_scorer,
-                                   cv=5,
-                                   n_jobs=jobs,
-                                   n_iter=20)
+        # gs_rf = RandomizedSearchCV(estimator=pipe_rf,
+        #                            param_distributions=grid_params_rf,
+        #                            scoring=f1w_scorer,
+        #                            cv=5,
+        #                            n_jobs=jobs,
+        #                            n_iter=20)
+        #
+        # gs_rf_dist = RandomizedSearchCV(estimator=pipe_rf_dist,
+        #                                  param_distributions=grid_params_rf,
+        #                                  scoring=f1w_scorer,
+        #                                  cv=5,
+        #                                  n_jobs=jobs,
+        #                                  n_iter=20)
+        #
+        # gs_knn = RandomizedSearchCV(estimator=pipe_knn,
+        #                             param_distributions=grid_params_knn,
+        #                             scoring=f1w_scorer,
+        #                             cv=5,
+        #                             n_jobs=jobs,
+        #                             n_iter=20)
+        #
+        # gs_knn_dist = RandomizedSearchCV(estimator=pipe_knn_dist,
+        #                                   param_distributions=grid_params_knn,
+        #                                   scoring=f1w_scorer,
+        #                                   cv=5,
+        #                                   n_jobs=jobs,
+        #                                   n_iter=20)
 
-        gs_rf_dist = RandomizedSearchCV(estimator=pipe_rf_dist,
-                                         param_distributions=grid_params_rf,
+        from sklearn.model_selection import GridSearchCV
+
+        gs_xgb = GridSearchCV(estimator=pipe_xgb,
+                                    param_grid=grid_params_xgboost,
+                                    scoring=f1w_scorer,
+                                    cv=5,
+                                    n_jobs=jobs)
+
+        gs_xgb_dist = GridSearchCV(estimator=pipe_xgb_dist,
+                                         param_grid=grid_params_xgboost,
                                          scoring=f1w_scorer,
                                          cv=5,
-                                         n_jobs=jobs,
-                                         n_iter=20)
-
-        gs_knn = RandomizedSearchCV(estimator=pipe_knn,
-                                    param_distributions=grid_params_knn,
-                                    scoring=f1w_scorer,
-                                    cv=5,
-                                    n_jobs=jobs,
-                                    n_iter=20)
-
-        gs_knn_dist = RandomizedSearchCV(estimator=pipe_knn_dist,
-                                          param_distributions=grid_params_knn,
-                                          scoring=f1w_scorer,
-                                          cv=5,
-                                          n_jobs=jobs,
-                                          n_iter=20)
-
-        gs_xgb = RandomizedSearchCV(estimator=pipe_xgb,
-                                    param_distributions=grid_params_xgboost,
-                                    scoring=f1w_scorer,
-                                    cv=5,
-                                    n_jobs=jobs,
-                                    n_iter=20)
-
-        gs_xgb_dist = RandomizedSearchCV(estimator=pipe_xgb_dist,
-                                          param_distributions=grid_params_xgboost,
-                                          scoring=f1w_scorer,
-                                          cv=5,
-                                          n_jobs=jobs,
-                                          n_iter=20)
+                                         n_jobs=jobs)
 
         # List of pipelines for ease of iteration
-        grids = [gs_rf, gs_rf_dist, gs_knn, gs_knn_dist, gs_xgb, gs_xgb_dist]
+        grids = [gs_xgb, gs_xgb_dist]#, gs_rf, gs_rf_dist, gs_knn, gs_knn_dist]
 
         # Dictionary of pipelines and classifier types for ease of reference
-        grid_dict = {0: 'Random Forest', 1: 'Random Forest w/ dist',
-                     2: 'KNN', 3: 'KNN w/ dist',
-                     4: 'XGB', 5: 'XGB w/ dist'}
+        grid_dict = {2: 'Random Forest',3: 'Random Forest w/ dist',
+                     4: 'KNN', 5: 'KNN w/ dist',
+                     0: 'XGB', 1: 'XGB w/ dist'}
 
         # Fit the grid search objects
         print('Performing model optimizations...')
