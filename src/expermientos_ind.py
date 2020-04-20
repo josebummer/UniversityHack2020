@@ -196,11 +196,11 @@ def main():
 
         pipe_xgb = Pipeline([('rxy', DeleteXY()),
                              # ('scl', StandardScaler()),
-                             ('clf', XGBClassifier())])
+                             ('clf', XGBClassifier(tree_method='hist'))])
 
         pipe_xgb_dist = Pipeline([('add', AddColumns()),
                                    # ('scl', StandardScaler()),
-                                   ('clf', XGBClassifier())])
+                                   ('clf', XGBClassifier(tree_method='hist'))])
 
         # Set grid search params
         grid_params_rf = [{'clf__criterion': ['gini', 'entropy'],
