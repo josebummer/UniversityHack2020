@@ -41,7 +41,7 @@ cols = X.columns
 val_idx = X.idx_test.astype(np.int)
 cv = [((val_idx!=i).values.nonzero(),(val_idx==i).values.nonzero()) for i in range(5)]
 
-X = X
+# X = X
 y = le.transform(y)
 
 #
@@ -55,8 +55,8 @@ y_weights = clase_weights[y].ravel()
 #
 
 X_uncalib = np.zeros((X.shape[0],7))
-for tr_idx, ts_idx in cv:
-    cv_cols = [f'CV_{i}_{l}' for l in le.classes_ for i in range(5)]
+for i, (tr_idx, ts_idx) in enumerate(cv):
+    cv_cols = [f'CV_{i}_{l}' for l in le.classes_]
     X_uncalib[ts_idx] = X[cv_cols].iloc[ts_idx]
 
 cr = classification_report(y,X_uncalib.argmax(1),target_names=le.classes_,digits=3,sample_weight=y_weights)
@@ -80,9 +80,9 @@ def eval_sol2(i, X, y, y_weights):
 xs = []
 yp_prob_calib = np.zeros(y.size).astype(np.int)
 
-for tr_idx, ts_idx in cv:
-    cv_cols = [f'CV_{i}_{l}' for l in le.classes_ for i in [0]]
-    yp_prob = X[cv_cols].values
+for i,(tr_idx, ts_idx) in enumerate(cv):
+    # cv_cols = [f'CV_{i}_{l}' for l in le.classes_]
+    # yp_prob = X[cv_cols].values
     yp_prob = X_uncalib
 
     de = differential_evolution(
