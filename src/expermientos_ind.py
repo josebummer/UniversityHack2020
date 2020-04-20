@@ -179,27 +179,27 @@ def main():
 
         # Construct some pipelines
         pipe_rf = Pipeline([('rxy', DeleteXY()),
-                             ('scl', StandardScaler()),
+                             # ('scl', StandardScaler()),
                             ('clf', RandomForestClassifier())])
 
         pipe_rf_dist = Pipeline([('add', AddColumns()),
-                                    ('scl', StandardScaler()),
+                                    # ('scl', StandardScaler()),
                                   ('clf', RandomForestClassifier())])
 
         pipe_knn = Pipeline([('rxy', DeleteXY()),
-                             ('scl', StandardScaler()),
+                             # ('scl', StandardScaler()),
                              ('clf', KNeighborsClassifier())])
 
         pipe_knn_dist = Pipeline([('add', AddColumns()),
-                                   ('scl', StandardScaler()),
+                                   # ('scl', StandardScaler()),
                                    ('clf', KNeighborsClassifier())])
 
         pipe_xgb = Pipeline([('rxy', DeleteXY()),
-                             ('scl', StandardScaler()),
+                             # ('scl', StandardScaler()),
                              ('clf', XGBClassifier())])
 
         pipe_xgb_dist = Pipeline([('add', AddColumns()),
-                                   ('scl', StandardScaler()),
+                                   # ('scl', StandardScaler()),
                                    ('clf', XGBClassifier())])
 
         # Set grid search params
