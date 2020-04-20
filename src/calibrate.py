@@ -93,12 +93,12 @@ xs = []
 for tr_idx,ts_idx in progressbar.progressbar(cv):
     de = differential_evolution(
         eval_sol2,
-        [(-1,1)]*len(le.classes_),
+        [(-1, 1)] * len(le.classes_),
         popsize=30,
         tol=1e-4,
         workers=-1,
         updating='deferred',
-        args=[X[tr_idx],y[tr_idx],y_weights[tr_idx]])
+        args=[X[tr_idx], y[tr_idx], y_weights[tr_idx]])
     ypred2[ts_idx] = predict2(de.x,X[ts_idx])
     xs.append(de.x)
 
