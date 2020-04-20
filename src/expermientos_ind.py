@@ -21,7 +21,7 @@ from aux_scorer import get_weight_f1
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('-l',dest='label',required=True)
-parser.add_argument('-j',dest='jobs',required=True)
+parser.add_argument('-j',dest='jobs',type=int,required=True)
 args = parser.parse_args()
 
 # Load data
