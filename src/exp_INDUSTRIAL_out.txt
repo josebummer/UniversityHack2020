@@ -1,0 +1,57 @@
+
+--------------------OVA: INDUSTRIAL vs All------------------
+Performing model optimizations...
+
+Estimator: XGB
+Best params: {'clf__learning_rate': 0.15, 'clf__max_depth': 2, 'clf__n_estimators': 400}
+Best training f1: 0.929
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.99      0.98      0.98     19726
+           1       0.63      0.75      0.69       920
+
+    accuracy                           0.97     20646
+   macro avg       0.81      0.87      0.83     20646
+weighted avg       0.97      0.97      0.97     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.94      0.98      0.96 16319.63532387043
+           1       0.91      0.75      0.82 4413.708937970392
+
+    accuracy                           0.93 20733.344261840823
+   macro avg       0.92      0.87      0.89 20733.344261840823
+weighted avg       0.93      0.93      0.93 20733.344261840823
+
+
+Estimator: XGB w/ dist
+Best params: {'clf__learning_rate': 0.15, 'clf__max_depth': 2, 'clf__n_estimators': 400}
+Best training f1: 0.929
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.99      0.98      0.98     19726
+           1       0.63      0.75      0.69       920
+
+    accuracy                           0.97     20646
+   macro avg       0.81      0.87      0.84     20646
+weighted avg       0.97      0.97      0.97     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.94      0.98      0.96 16319.63532387043
+           1       0.91      0.75      0.82 4413.708937970392
+
+    accuracy                           0.93 20733.344261840823
+   macro avg       0.92      0.87      0.89 20733.344261840823
+weighted avg       0.93      0.93      0.93 20733.344261840823
+
+
+Classifier with best test set f1: XGB w/ dist
+
+Saved XGB w/ dist grid search pipeline to file: ./models_w_newd/INDUSTRIAL_best_gs_pipeline.pkl
