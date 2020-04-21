@@ -4,7 +4,7 @@ import json
 
 import numpy as np
 import pandas as pd
-from expermientos1 import prepare_data, fillna, to_numeric, AddColumns
+from expermientos1 import prepare_data, fillna, to_numeric, AddColumns, DeleteXY
 from imblearn.pipeline import Pipeline
 from imblearn.under_sampling import EditedNearestNeighbours
 from sklearn.metrics import classification_report
