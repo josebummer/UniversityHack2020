@@ -1,0 +1,30 @@
+
+--------------------OVA: AGRICULTURE vs All------------------
+Performing model optimizations...
+
+Estimator: XGB
+Best params: {'clf__n_estimators': 600, 'clf__max_depth': 2, 'clf__learning_rate': 0.15}
+Best training f1: 0.993
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00     20577
+           1       0.77      0.84      0.81        69
+
+    accuracy                           1.00     20646
+   macro avg       0.89      0.92      0.90     20646
+weighted avg       1.00      1.00      1.00     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00 20207.645276495055
+           1       0.96      0.84      0.90 446.02973195614675
+
+    accuracy                           1.00 20653.675008451202
+   macro avg       0.98      0.92      0.95 20653.675008451202
+weighted avg       1.00      1.00      1.00 20653.675008451202
+
+
+Estimator: XGB /w dist
