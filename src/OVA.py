@@ -448,6 +448,7 @@ def main():
         sample_weights_bin = np.array([class_weight[i] for i in labels])
 
         assert -2 not in np.unique(y_pred_label_bin[label])
+        assert -2 not in np.unique(y_pred_label_bin[label])
 
         print('Label binary ' + label + ' classification report:')
         print('Normal:')

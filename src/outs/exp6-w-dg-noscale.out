@@ -28,3 +28,35 @@ weighted avg       1.00      1.00      1.00 20653.675008451202
 
 
 Estimator: XGB /w dist
+Best params: {'clf__n_estimators': 600, 'clf__max_depth': 8, 'clf__learning_rate': 0.1}
+Best training f1: 0.993
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00     20577
+           1       0.79      0.78      0.79        69
+
+    accuracy                           1.00     20646
+   macro avg       0.90      0.89      0.89     20646
+weighted avg       1.00      1.00      1.00     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       1.00      1.00      1.00 20207.645276495055
+           1       0.96      0.78      0.86 446.02973195614675
+
+    accuracy                           0.99 20653.675008451202
+   macro avg       0.98      0.89      0.93 20653.675008451202
+weighted avg       0.99      0.99      0.99 20653.675008451202
+
+
+Classifier with best test set f1: XGB
+
+Saved XGB grid search pipeline to file: ./models_w_newd_noscale/AGRICULTURE_best_gs_pipeline.pkl
+
+--------------------OVA: INDUSTRIAL vs All------------------
+Performing model optimizations...
+
+Estimator: XGB
