@@ -12,6 +12,7 @@ from sklearn.metrics import classification_report
 from expermientos1 import prepare_data, fillna, to_numeric
 from imblearn.pipeline import Pipeline
 from xgboost import XGBClassifier
+from sklearn.model_selection import GridSearchCV
 
 
 def main():
@@ -65,12 +66,13 @@ def main():
     for i, (idx_train, idx_test) in enumerate(folds):
         print('\nFold %d:' % i)
 
-        model = Pipeline([('scl', StandardScaler()),
-                          ('clf', XGBClassifier(n_jobs=-1))])
+        # model = Pipeline([('scl', StandardScaler()),
+        #                   ('clf', XGBClassifier(n_jobs=-1))])
+        model = XGBClassifier(n_jobs=-1, n_estimators=900)
 
         print('Training...')
         sample_weight = np.array(sample_weights.values)[idx_train]*labels.size
-        model.fit(data.iloc[idx_train], labels[idx_train], clf__sample_weight=sample_weight)
+        model.fit(data.iloc[idx_train], labels[idx_train], sample_weight=sample_weight)
 
         print('Predicting...')
         # pred_proba = model.predict_proba(data.iloc[idx_test])
