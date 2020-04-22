@@ -29,10 +29,6 @@ def main():
     xy_dens_cols = [x for x in data.columns if "XY_DENS" in x]
     xy_ori_cols = ['X', 'Y']
 
-    data['VALUE'] = data['AREA'] * data['CADASTRALQUALITYID'] * data['MAXBUILDINGFLOOR']
-    data['VALUE2'] = data['AREA'] * data['CADASTRALQUALITYID']
-    data['VALUE3'] = data['CADASTRALQUALITYID'] * data['MAXBUILDINGFLOOR']
-    data['VALUE4'] = data['AREA'] * data['MAXBUILDINGFLOOR']
     custom_cols = [f'CUSTOM_{i}' for i in range(4)]
     distances_cols = [f'C_DIST_{i}' for i in range(21)]
 
@@ -58,7 +54,7 @@ def main():
 
     data[ova_cols] = trainOVA
 
-    mod_cols = basic_cols + geom_ori_cols + geom_dist_cols + geom_prob_cols + rgbn_cols + xy_dens_cols + custom_cols + distances_cols + ova_cols
+    mod_cols = basic_cols + geom_ori_cols + geom_dist_cols + geom_prob_cols + rgbn_cols + xy_dens_cols + custom_cols + distances_cols
 
     data = data.iloc[:sample_weights.shape[0], ][mod_cols]
 
@@ -75,11 +71,10 @@ def main():
 
         # model = Pipeline([('scl', StandardScaler()),
         #                   ('clf', XGBClassifier(n_jobs=-1))])
-        # best_params = {'learning_rate': 0.1, 'max_depth': 2, 'n_estimators': 900, 'subsample': 0.8333333333333333,
-        #                'n_jobs': 16, 'tree_method': 'hist'}
-        # model = XGBClassifier(**best_params)
-        model = XGBClassifier(learning_rate=0.1, min_child_weight=1,gamma=1,subsample=0.6,colsample_bytree=0.8,
-                              max_depth=5,n_estimators=200, n_jobs=16)
+        best_params = {'subsample': 0.6, 'n_estimators': 400, 'min_child_weight': 1, 'max_depth': 3, 'learning_rate': 0.1, 'gamma': 1.5, 'colsample_bytree': 0.6}
+        model = XGBClassifier(**best_params)
+        # model = XGBClassifier(learning_rate=0.1, min_child_weight=1,gamma=1,subsample=0.6,colsample_bytree=0.8,
+        #                       max_depth=5,n_estimators=200, n_jobs=16)
 
         # model = XGBClassifier(n_jobs=16)
 
