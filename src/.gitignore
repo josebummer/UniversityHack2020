@@ -1,12 +1,3 @@
-1models_nw_dn/
-2models_w_dg/
-2models_w_dg_factor/
-3models_w_dn_factor/
-4models_w_dn/
-models_nw_dg/
+*models*/
 ejecucion.sh
-models_merged/
-models_merged2/
-models_nw_newd/
 data/df_final.csv
-models_w_newd/

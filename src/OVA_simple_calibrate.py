@@ -4,7 +4,7 @@ import json
 
 import numpy as np
 import pandas as pd
-from expermientos1 import prepare_data, fillna, to_numeric
+from expermientos1 import prepare_data, fillna, to_numeric, AddColumns, DeleteXY
 from imblearn.pipeline import Pipeline
 from imblearn.under_sampling import EditedNearestNeighbours
 from sklearn.metrics import classification_report, confusion_matrix
@@ -36,7 +36,7 @@ def main():
     data['VALUE4'] = data['AREA'] * data['MAXBUILDINGFLOOR']
     mod_cols = ['VALUE', 'VALUE2', 'VALUE3', 'VALUE4']
 
-    mod_cols = basic_cols + geom_ori_cols + geom_dist_cols + geom_prob_cols + rgbn_cols + xy_dens_cols + mod_cols
+    mod_cols = basic_cols + geom_ori_cols + geom_dist_cols + geom_prob_cols + rgbn_cols + xy_dens_cols + mod_cols + xy_ori_cols
 
     data = data.iloc[:sample_weight.shape[0],][mod_cols]
 
@@ -103,8 +103,15 @@ def main():
 
             # class_weight = {-1: (sample_weights_bin_train[labels[idx_train]==-1].sum()+sample_weights_bin_test[labels[idx_test]==-1].sum()),
             #                 1: (sample_weights_bin_train[labels[idx_train]==1].sum()+sample_weights_bin_test[labels[idx_test]==1].sum())}
-            model = Pipeline([('scl', StandardScaler()),
-                              ('clf', XGBClassifier(n_jobs=-1))])
+
+            dump_file = './models_w_newd/' + label + '_best_gs_pipeline.pkl'
+            with open(dump_file, 'rb') as ofile:
+                grid = pickle.load(ofile)
+
+            model = grid.best_estimator_
+            for step in model.steps:
+                if step[0] == 'clf':
+                    step[1].n_jobs = -1
 
             print('Training...')
             model.fit(data.iloc[idx_train], labels[idx_train], clf__sample_weight=sample_weights_bin_train)
@@ -123,7 +130,7 @@ def main():
     out['idx_test'] = test
     out = pd.DataFrame(out, index=data.index)
     out = pd.concat([out, labels_ini], axis=1, sort=False)
-    out.to_csv('data/probs_ova_dg_samplew.txt', sep='|')
+    out.to_csv('data/probs_ova_dg_samplew_2.txt', sep='|')
 
 
 if __name__ == '__main__':

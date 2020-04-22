@@ -1,0 +1,57 @@
+
+--------------------OVA: RETAIL vs All------------------
+Performing model optimizations...
+
+Estimator: XGB
+Best params: {'clf__learning_rate': 0.15, 'clf__max_depth': 2, 'clf__n_estimators': 600}
+Best training f1: 0.904
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      0.99      0.99     20231
+           1       0.44      0.22      0.29       415
+
+    accuracy                           0.98     20646
+   macro avg       0.71      0.61      0.64     20646
+weighted avg       0.97      0.98      0.98     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.93      0.99      0.96 18807.341269046847
+           1       0.78      0.22      0.34 1826.163975940597
+
+    accuracy                           0.93 20633.505244987442
+   macro avg       0.86      0.61      0.65 20633.505244987442
+weighted avg       0.92      0.93      0.91 20633.505244987442
+
+
+Estimator: XGB w/ dist
+Best params: {'clf__learning_rate': 0.15, 'clf__max_depth': 2, 'clf__n_estimators': 900}
+Best training f1: 0.905
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      0.99      0.99     20231
+           1       0.46      0.22      0.30       415
+
+    accuracy                           0.98     20646
+   macro avg       0.72      0.61      0.64     20646
+weighted avg       0.97      0.98      0.98     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.93      0.99      0.96 18807.341269046847
+           1       0.80      0.22      0.35 1826.163975940597
+
+    accuracy                           0.93 20633.505244987442
+   macro avg       0.86      0.61      0.66 20633.505244987442
+weighted avg       0.92      0.93      0.91 20633.505244987442
+
+
+Classifier with best test set f1: XGB w/ dist
+
+Saved XGB w/ dist grid search pipeline to file: ./models_w_newd/RETAIL_best_gs_pipeline.pkl

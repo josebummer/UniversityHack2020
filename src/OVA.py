@@ -4,7 +4,7 @@ import json
 
 import numpy as np
 import pandas as pd
-from expermientos1 import prepare_data, fillna, to_numeric
+from expermientos1 import prepare_data, fillna, to_numeric, AddColumns, DeleteXY
 from imblearn.pipeline import Pipeline
 from imblearn.under_sampling import EditedNearestNeighbours
 from sklearn.metrics import classification_report
@@ -15,7 +15,7 @@ from xgboost import XGBClassifier
 
 
 def main():
-    data = pd.read_csv('data/train.txt', sep='|', index_col='ID').iloc[:1000,]
+    data = pd.read_csv('data/train.txt', sep='|', index_col='ID')
     labels_ini = data.iloc[:, -1]
     data.drop('CLASE', axis=1, inplace=True)
 
@@ -295,10 +295,28 @@ def main():
     # print(classification_report(labels_ini, labels_names[y_pred], sample_weight=sample_weight_factor))
 
     print('---------------------------------OVA-Weighted-Genetic MODEL--------------------------------')
-    data = pd.read_csv('data/new_train.txt', sep='|', index_col='ID').iloc[:1000,]
-    sample_weight = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID').iloc[:1000,]
-    labels_ini = data['CLASE']
+    data = pd.read_csv('data/df_final.csv', sep='|', index_col='ID')
+    sample_weight = pd.read_csv('data/train_weights.cvs', sep='|', index_col='ID')
+    labels_ini = data['CLASE'].iloc[:sample_weight.shape[0], ]
     data.drop('CLASE', axis=1, inplace=True)
+
+    basic_cols = ['CONTRUCTIONYEAR', 'MAXBUILDINGFLOOR', 'CADASTRALQUALITYID', 'AREA']
+    rgbn_cols = [x for x in data.columns if "RGBN_PROB_" in x]
+    geom_ori_cols = [x for x in data.columns if "GEOM_R" in x]
+    geom_dist_cols = [x for x in data.columns if "GEOM_DIST4" in x]
+    geom_prob_cols = [x for x in data.columns if "GEOM_PROB" in x]
+    xy_dens_cols = [x for x in data.columns if "XY_DENS" in x]
+    xy_ori_cols = ['X', 'Y']
+
+    data['VALUE'] = data['AREA'] * data['CADASTRALQUALITYID'] * data['MAXBUILDINGFLOOR']
+    data['VALUE2'] = data['AREA'] * data['CADASTRALQUALITYID']
+    data['VALUE3'] = data['CADASTRALQUALITYID'] * data['MAXBUILDINGFLOOR']
+    data['VALUE4'] = data['AREA'] * data['MAXBUILDINGFLOOR']
+    mod_cols = ['VALUE', 'VALUE2', 'VALUE3', 'VALUE4']
+
+    mod_cols = basic_cols + geom_ori_cols + geom_dist_cols + geom_prob_cols + rgbn_cols + xy_dens_cols + mod_cols + xy_ori_cols
+
+    data = data.iloc[:sample_weight.shape[0], ][mod_cols]
 
     # data = prepare_data(data)
     # data = fillna(data)
@@ -321,9 +339,9 @@ def main():
                         'OTHER': np.ones(labels_ini.shape[0], dtype=np.int) * -2}
     y_pred = np.ones(labels_ini.shape[0], dtype=np.int) * -1
 
-    dump_file = 'data/aggregated_mask_gt1.pkl'
-    with open(dump_file, 'rb') as ofile:
-        gt1 = pickle.load(ofile)
+    # dump_file = 'data/aggregated_mask_gt1.pkl'
+    # with open(dump_file, 'rb') as ofile:
+    #     gt1 = pickle.load(ofile)
 
     for i, (idx_train, idx_test) in enumerate(folds):
         print('\nFold %d:' % i)
@@ -332,14 +350,14 @@ def main():
         for label in labels_names:
             print('Load %s model:' % label)
 
-            dump_file = './models_nw_newd/' + label + '_best_gs_pipeline.pkl'
+            dump_file = './models_w_newd/' + label + '_best_gs_pipeline.pkl'
             with open(dump_file, 'rb') as ofile:
                 grid = pickle.load(ofile)
 
             model = grid.best_estimator_
             for step in model.steps:
-                if step[0] in ['enn', 'clf']:
-                    step[1].n_jobs = -1
+                if step[0] == 'clf':
+                    step[1].n_jobs = 8
 
             # dump_file = 'GEN_OUTPUT_' + label + '.json'
             # with open(dump_file, 'r') as ofile:
@@ -375,10 +393,11 @@ def main():
             sample_weights_bin_test = np.array([class_weight[i] for i in labels[idx_test]])
 
             print('Training...')
-            if 'enn' ==  model.steps[1][0] or model.steps[2][1].__class__.__name__=='KNeighborsClassifier' or model.steps[1][1].__class__.__name__=='KNeighborsClassifier':
-                model.fit(data_mask.iloc[idx_train], labels[idx_train])
-            else:
-                model.fit(data_mask.iloc[idx_train], labels[idx_train], clf__sample_weight=sample_weights_bin_train)
+            # if 'enn' ==  model.steps[1][0] or model.steps[2][1].__class__.__name__=='KNeighborsClassifier' or model.steps[1][1].__class__.__name__=='KNeighborsClassifier':
+            #     model.fit(data_mask.iloc[idx_train], labels[idx_train])
+            # else:
+            #     model.fit(data_mask.iloc[idx_train], labels[idx_train], clf__sample_weight=sample_weights_bin_train)
+            model.fit(data_mask.iloc[idx_train], labels[idx_train], clf__sample_weight=sample_weights_bin_train)
 
             print('Predicting...')
             pred_proba = model.predict_proba(data_mask.iloc[idx_test])
@@ -428,6 +447,7 @@ def main():
 
         sample_weights_bin = np.array([class_weight[i] for i in labels])
 
+        assert -2 not in np.unique(y_pred_label_bin[label])
         assert -2 not in np.unique(y_pred_label_bin[label])
 
         print('Label binary ' + label + ' classification report:')
