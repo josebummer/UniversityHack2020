@@ -57,12 +57,12 @@ def main():
     f1w = get_weight_f1(class_weight)
     f1w_scorer = make_scorer(f1w)
 
-    grid_params_xgboost = [{'clf__max_depth': [2, 6, 8, 12],
-                            'clf__learning_rate': [0.1, 0.15, 0.3, 0.4],
-                            'clf__n_estimators': [100, 200, 400, 600, 900],
-                            'subsample': np.linspace(0.5, 1, 5)}]
+    grid_params_xgboost = [{'max_depth': [2, 6, 8],
+                            'learning_rate': [0.1, 0.15, 0.3],
+                            'n_estimators': [100, 200, 400, 600, 900],
+                            'subsample': np.linspace(0.5, 1, 4)}]
 
-    gs_xgb = GridSearchCV(estimator=XGBClassifier(),
+    gs_xgb = GridSearchCV(estimator=XGBClassifier(tree_method='hist'),
                             param_grid=grid_params_xgboost,
                             scoring=f1w_scorer,
                             cv=5,
