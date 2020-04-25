@@ -6,7 +6,7 @@ output: pdf_document
 ## Análisis exploratorio de los datos
 En primer lugar comenzamos explorando el conjunto y viendo lascaracterísticas más básicas (numero de instancias, número de clases, etc...). Entre estos valores, cabe destacar la distribución de las clases, ya que el problema presenta un desbalanceo bastante elevado potencialmente hacia una clase concreta (RESIDENTIAL).
 
-![](hist.png)
+![](docu_img/hist.png)
 
 Se puede comprobar claramente en la imagen que tenemos un número de instancias muy superior de la clase *RESIDENTIAL* respecto al resto de clases. También se puede apreciar cómo hay un desbalaceo también bastante notatorio de la clase *AGRICULTURE* respecto al resto. Este problema hay que tratarlo y en posteriores secciones veremos los distintos métodos utilizados y por cuál se ha optado finalmente.
 
@@ -16,14 +16,14 @@ En este apartado lo que hicimos fue obtener distintos estadísticos de las varia
 ### Distribución de las clases
 Se hizo un estudio de las distribuciones de las clases para comprobar la existencia de valores extraños, distribuciones anómalas o posibles distribuciones bimodales o multimodales. Sin embargo, comprobamos que la mayoría de las variables tenían una distribución normal y se comportaban como tal. Algunas variables como *Q_R_4_0_0* no aportaban información alguna:
 
-![](q4.png)
+![](docu_img/q4.png)
 
 En secciones posteriores veremos las transformaciones realizadas, por lo que podremos ver el procedimiento realizado para la eliminación o extracción de información de estas variables.
 
 ### Relación de las variables respecto a la clase
 La idea de este estudio era comprobar si había ciera relación y si podíamos sacar alguna conclusion respecto a la importancia de las variables. Por ejemplo, pudimos observar que la variable *CONTRUCTIONYEAR* entiende que cuando el valor de ésta variable es bajo, la clase no será *AGRICULTURE*.
 
-![](contruction.png)
+![](docu_img/contruction.png)
 
 ### Estudio de la correlación entre variables
 Hicimos un estudio de correlación entre distintas variables y comprobamos la existencia de correlación entre variables de color entre sí y variables inflarrojas entre sí. Estuvimos estudiando qué decision tomar para finalmente decidir que no íbamos a eliminarlas por dos motivos. El primero, que tomamos estas variables como conjunto, y que si falta una de ellas, el conjunto pierde información, aunque esten muy correladas. Por otra parte, por una futura extracción de información y posterior transformación de todas estas varaibles. El resto de variables no tenían correlación.
@@ -44,7 +44,7 @@ explicitando el contenido de los datos en información de valor.
 Tras un análisis de los datos observamos que sólo existen 240 configuraciones distintas para las variables 
 que describen los deciles del espectrograma. Por lo tanto transformamos éstas a 7 nuevas variables que codifican la probabilidad de pertenecer a cada una de las clases, en el caso de haber sólo una instancia lo asignamos a AGRICULTURA, pues es la que tienes valores más dispersos. A continuación se puede ver la curva roc para cada una de estas variables, respecto a su clase, de forma individual.
 
-![](rgbnir.png)
+![](docu_img/rgbnir.png)
 
 De aquí vemos cómo esta variable es crítia para predecir la clase de agricultura, y tiene sentido que la fotografía area de una parcela con calificación de AGRICULTURA sera significativamente distinta al resto.
 
@@ -52,7 +52,7 @@ De aquí vemos cómo esta variable es crítia para predecir la clase de agricult
 
 Para facilitarnos el análisis exploratorio de datos tradujimos los valores originales de las variabels X, Y a unos valores aproximados al mapa de Madrid. Para esto ploteamos los valores en un mapa, y a modo de una huella dactilar, fuimos buscando patrones características que identificábamos posteriormente en un mapa con coordenadas, en 12 zonas distintas identificamos 4 puntos próximos (para minimizar el error) y aplicamos mínimos cuadrados para aprender una traducción robusta.
 
-![](xy_trans.png)
+![](docu_img/xy_trans.png)
 
 El resultado no se ajusta sobre la parcela exacta por la acumulación de errores, pero nos permite identificar la zona con un dos o tres parcelas de error en el centro y algo más en la periferia.
 
@@ -60,18 +60,18 @@ El resultado no se ajusta sobre la parcela exacta por la acumulación de errores
 
 Mediante un algoritmo basado en poblaciones (*differential evolution*) buscamos puntos en el mapa que definan un diagrama de Voronoi donde se maximice dentro de cada celda, la variedad en el histograma a la vez que se buscan grupos de tamaño parejo. En la siguiente imagen se puede ver en naranja los puntos que minimizan nuestra función de coste.
 
-![](map.png)
+![](docu_img/map.png)
 
 ### Transformación de los atributos de geometría
 
 Existen cuatro variables con el prefijo "GEOM_" cuyo contenido puede sernos de ayuda pero la información estaba
 altamente ofuscada. A continuación podemos ver las distinas distribuciones de GEOM_1 según la clase objetivo
 
-![](geom_1.png)
+![](docu_img/geom_1.png)
 
 Para compensar la cola de las variables GEOM_2,3 y 4 aplicamos logaritmo y obtenemos cuatro distribuciones aproximadamente normales. A continuación la curva de ROC para un knn sólo con estas cuatro variables. Vemos cómo la información no parece despreciable.
 
-![](geom_2.png)
+![](docu_img/geom_2.png)
 
 Aplicamos dos transformaciones distintas:
 
@@ -80,7 +80,7 @@ Aplicamos dos transformaciones distintas:
 
 Con esta segunda transformación conseguimos mejorar la gráfica anterior de forma significativa como se puede apreciar en la siguiente gráfica que coge para cada instancia la mayor de las *probabilidades*.
 
-![](geom_3.png)
+![](docu_img/geom_3.png)
 
 Estas variables se crean teniendo en cuenta no el total de puntos, sino los puntos dentro del mismo área antes descrita.
 
