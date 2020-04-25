@@ -1,0 +1,57 @@
+
+--------------------OVA: PUBLIC vs All------------------
+Performing model optimizations...
+
+Estimator: XGB
+Best params: {'clf__learning_rate': 0.15, 'clf__max_depth': 2, 'clf__n_estimators': 600}
+Best training f1: 0.907
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      0.98      0.98     20038
+           1       0.39      0.45      0.42       608
+
+    accuracy                           0.96     20646
+   macro avg       0.69      0.71      0.70     20646
+weighted avg       0.97      0.96      0.96     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.93      0.98      0.95 18309.358310209784
+           1       0.73      0.45      0.56 2374.94475947527
+
+    accuracy                           0.92 20684.303069685055
+   macro avg       0.83      0.71      0.75 20684.303069685055
+weighted avg       0.91      0.92      0.91 20684.303069685055
+
+
+Estimator: XGB w/ dist
+Best params: {'clf__learning_rate': 0.1, 'clf__max_depth': 2, 'clf__n_estimators': 400}
+Best training f1: 0.907
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.98      0.98      0.98     20038
+           1       0.38      0.43      0.41       608
+
+    accuracy                           0.96     20646
+   macro avg       0.68      0.71      0.69     20646
+weighted avg       0.97      0.96      0.96     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.93      0.98      0.95 18309.358310209784
+           1       0.72      0.43      0.54 2374.94475947527
+
+    accuracy                           0.92 20684.303069685055
+   macro avg       0.83      0.71      0.75 20684.303069685055
+weighted avg       0.91      0.92      0.91 20684.303069685055
+
+
+Classifier with best test set f1: XGB
+
+Saved XGB grid search pipeline to file: ./models_w_newd/PUBLIC_best_gs_pipeline.pkl

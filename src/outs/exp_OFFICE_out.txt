@@ -1,0 +1,57 @@
+
+--------------------OVA: OFFICE vs All------------------
+Performing model optimizations...
+
+Estimator: XGB
+Best params: {'clf__learning_rate': 0.1, 'clf__max_depth': 2, 'clf__n_estimators': 600}
+Best training f1: 0.923
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.99      0.99      0.99     20299
+           1       0.29      0.33      0.31       347
+
+    accuracy                           0.97     20646
+   macro avg       0.64      0.66      0.65     20646
+weighted avg       0.98      0.97      0.98     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.94      0.99      0.96 18942.849841099236
+           1       0.67      0.33      0.45 1632.9762262448066
+
+    accuracy                           0.93 20575.82606734404
+   macro avg       0.81      0.66      0.71 20575.82606734404
+weighted avg       0.92      0.93      0.92 20575.82606734404
+
+
+Estimator: XGB w/ dist
+Best params: {'clf__learning_rate': 0.15, 'clf__max_depth': 2, 'clf__n_estimators': 100}
+Best training f1: 0.922
+Test set metrics for best params:
+Normal clasification:
+              precision    recall  f1-score   support
+
+          -1       0.99      0.98      0.99     20299
+           1       0.26      0.35      0.29       347
+
+    accuracy                           0.97     20646
+   macro avg       0.62      0.66      0.64     20646
+weighted avg       0.98      0.97      0.97     20646
+
+Weighted clasification:
+              precision    recall  f1-score   support
+
+          -1       0.95      0.98      0.96 18942.849841099236
+           1       0.64      0.35      0.45 1632.9762262448066
+
+    accuracy                           0.93 20575.82606734404
+   macro avg       0.79      0.66      0.71 20575.82606734404
+weighted avg       0.92      0.93      0.92 20575.82606734404
+
+
+Classifier with best test set f1: XGB
+
+Saved XGB grid search pipeline to file: ./models_w_newd/OFFICE_best_gs_pipeline.pkl
